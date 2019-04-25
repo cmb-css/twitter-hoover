@@ -17,7 +17,7 @@ class HooverStreamer(TwythonStreamer):
 
     def on_error(self, status_code, data):
         print('ERROR {}: {}'.format(status_code, data))
-        with open(self.outfile, 'a') as file:
+        with open(self.errfile, 'a') as file:
             file.write('ERROR {}: {}\n'.format(status_code, data))
 
 
