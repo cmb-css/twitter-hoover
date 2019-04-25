@@ -1,3 +1,4 @@
+import time
 import json
 from twython import TwythonStreamer
 from hoover.auth import read_key_and_secret, read_token_secret_pin
@@ -21,7 +22,7 @@ class HooverStreamer(TwythonStreamer):
             file.write('ERROR {}: {}\n'.format(status_code, data))
 
 
-def read_stream(key_file, auth_file, keywords_file, outfile, errfile):
+def _read_stream(key_file, auth_file, keywords_file, outfile, errfile):
     app_key, app_secret = read_key_and_secret(key_file)
     oauth_token, oauth_token_secret = read_token_secret_pin(auth_file)
 
@@ -29,3 +30,14 @@ def read_stream(key_file, auth_file, keywords_file, outfile, errfile):
                             oauth_token, oauth_token_secret)
     terms = create_filter(keywords_file)
     stream.statuses.filter(track=terms)
+
+
+def read_stream(key_file, auth_file, keywords_file, outfile, errfile):
+    while True:
+        try:
+            _read_stream(key_file, auth_file, keywords_file, outfile, errfile)
+        except Exception as err:
+            with open(errfile, 'a') as file:
+                file.write('EXCEPTION {}\n'.format(err))
+            # sleep for one minute and try again
+            time.sleep(60)
