@@ -1,12 +1,15 @@
 import argparse
 from hoover.auth import auth_app
 from hoover.stream import read_stream
+from hoover.simple import simplify
 
 
 def cli():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('command', type=str, help='command to execute')
+    parser.add_argument('--infile', type=str,
+                        help='input file', default=None)
     parser.add_argument('--outfile', type=str,
                         help='output file', default=None)
     parser.add_argument('--errfile', type=str,
@@ -30,5 +33,7 @@ def cli():
     elif args.command == 'stream':
         read_stream(args.key, args.auth, args.keywords,
                     args.outfile, args.errfile)
+    elif args.command == 'simplify':
+        simplify(args.infile)
     else:
         print('Unknown command: {}'.format(args.command))
