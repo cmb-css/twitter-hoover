@@ -2,6 +2,7 @@ import argparse
 from hoover.auth import auth_app
 from hoover.stream import read_stream
 from hoover.simple import simplify
+from hoover.youtube import extract_videos
 
 
 def cli():
@@ -35,5 +36,7 @@ def cli():
                     args.outfile, args.errfile)
     elif args.command == 'simplify':
         simplify(args.infile)
+    elif args.command == 'youtube':
+        extract_videos(args.infile)
     else:
         print('Unknown command: {}'.format(args.command))
