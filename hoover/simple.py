@@ -36,11 +36,17 @@ def simplify(infile):
                 simple_data['retweeted'] = True
                 simple_data['retweeted_id'] = rs['id_str']
                 simple_data['retweeted_user_id'] = rs['user']['id_str']
+                if 'extended_tweet' in rs:
+                    simple_data['full_text'] \
+                        = rs['extended_tweet']['full_text']
 
             if 'quoted_status' in data:
                 qs = data['quoted_status']
                 simple_data['quoted'] = True
                 simple_data['quoted_id'] = qs['id_str']
                 simple_data['quoted_user_id'] = qs['user']['id_str']
+                if 'extended_tweet' in qs:
+                    simple_data['full_text'] \
+                        = qs['extended_tweet']['full_text']
 
             print(json.dumps(simple_data))
