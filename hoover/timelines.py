@@ -75,15 +75,18 @@ class Timelines():
             max_id = self.max_id
             finished = False
             while not finished:
-                time.sleep(1)
-                finished = True
+                # time.sleep(1)
                 timeline = self.get_timeline(user_id, max_id - 1)
                 if timeline:
+                    print('{} tweets received'.format(str(len(timeline))))
                     for tweet in timeline:
                         max_id = tweet['id']
                         if tweet['id'] > min_id:
-                            finished = False
                             tweets.append(tweet)
+                        else:
+                            finished = True
+                else:
+                    finished = True
             # write to file
             file = self._user_path(user_id)
             with open(file, 'a') as f:
