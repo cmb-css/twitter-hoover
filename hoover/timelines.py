@@ -34,10 +34,11 @@ class Timelines():
         self.user_ids = get_user_ids(infile)
         self.outdir = outdir
         self.errfile = errfile
-        self.min_utc = min_utc
         self.twitter = Twython(app_key, app_secret,
                                oauth_token, oauth_token_secret)
-        self.max_id = utc2snowflake(utcnow())
+        self.min_id = utc2snowflake(min_utc)
+        self.max_id = None
+        self.iter = 0
 
     def get_timeline(self, user_id, max_id):
         try:
@@ -63,13 +64,15 @@ class Timelines():
             tweet = json.loads(ll)
             return tweet['id']
 
-    def retrieve(self):
+    def _retrieve(self):
         for i, user_id in enumerate(self.user_ids):
-            print('processing user #{}/{}...'.format(i, len(self.user_ids)))
-            ntweets = 0
-            max_id = self._user_last_tweet_id(user_id)
-            if max_id is None:
-                max_id = self.max_id
+            print('[iter: {}] processing user #{}/{}...'.format(
+                self.iter, i, len(self.user_ids)))
+            tweets = []
+            min_id = self._user_last_tweet_id(user_id)
+            if min_id is None:
+                min_id = self.min_id
+            max_id = self.max_id
             finished = False
             while not finished:
                 time.sleep(1)
@@ -78,14 +81,21 @@ class Timelines():
                 if timeline:
                     for tweet in timeline:
                         max_id = tweet['id']
-                        if str2utc(tweet['created_at']) >= self.min_utc:
+                        if tweet['id'] > min_id:
                             finished = False
-                            ntweets += 1
-                            # write to file
-                            file = self._user_path(user_id)
-                            with open(file, 'a') as f:
-                                f.write('{}\n'.format(json.dumps(tweet)))
-            print('{} tweets found.'.format(ntweets))
+                            tweets.append(tweet)
+            # write to file
+            file = self._user_path(user_id)
+            with open(file, 'a') as f:
+                for tweet in reversed(tweets):
+                    f.write('{}\n'.format(json.dumps(tweet)))
+            print('{} tweets found.'.format(len(tweets)))
+
+    def retrieve(self):
+        while True:
+            self.max_id = utc2snowflake(utcnow())
+            self._retrieve()
+            self.iter += 1
 
 
 def retrieve_timelines(key_file, auth_file, infile, outdir, errfile, min_utc):
