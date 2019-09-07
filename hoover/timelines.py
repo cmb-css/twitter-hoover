@@ -29,11 +29,12 @@ def last_line(file):
 
 
 class Timelines():
-    def __init__(self, infile, outdir, errfile, min_utc,
+    def __init__(self, infile, outdir, errfile, min_utc, retweets,
                  app_key, app_secret, oauth_token, oauth_token_secret):
         self.user_ids = get_user_ids(infile)
         self.outdir = outdir
         self.errfile = errfile
+        self.retweets = retweets
         self.twitter = Twython(app_key, app_secret,
                                oauth_token, oauth_token_secret)
         self.min_id = utc2snowflake(min_utc)
@@ -43,7 +44,7 @@ class Timelines():
     def get_timeline(self, user_id, max_id):
         try:
             timeline = self.twitter.get_user_timeline(user_id=user_id,
-                                                      include_rts=1,
+                                                      include_rt=self.retweets,
                                                       max_id=max_id,
                                                       count=200)
             return timeline
@@ -75,7 +76,7 @@ class Timelines():
             max_id = self.max_id
             finished = False
             while not finished:
-                # time.sleep(1)
+                time.sleep(1)
                 timeline = self.get_timeline(user_id, max_id - 1)
                 if timeline:
                     print('{} tweets received'.format(str(len(timeline))))
@@ -101,10 +102,12 @@ class Timelines():
             self.iter += 1
 
 
-def retrieve_timelines(key_file, auth_file, infile, outdir, errfile, min_utc):
+def retrieve_timelines(key_file, auth_file,
+                       infile, outdir, errfile,
+                       min_utc, retweets):
     app_key, app_secret = read_key_and_secret(key_file)
     oauth_token, oauth_token_secret = read_token_secret_pin(auth_file)
 
-    timelines = Timelines(infile, outdir, errfile, min_utc,
+    timelines = Timelines(infile, outdir, errfile, min_utc, retweets,
                           app_key, app_secret, oauth_token, oauth_token_secret)
     timelines.retrieve()

@@ -32,6 +32,8 @@ def cli():
                         default=None)
     parser.add_argument('--mindate', type=str, help='earliest date for tweets',
                         default=None)
+    parser.add_argument('--noretweets', help='do not retrieve retweets',
+                        action='store_true')
 
     args = parser.parse_args()
 
@@ -49,6 +51,9 @@ def cli():
         min_utc = ddmmyy2utc(args.mindate)
         print('minimum date: {}'.format(args.mindate))
 
+    if args.noretweets:
+        print('not retrieving retweets')
+
     if args.command == 'auth':
         auth_app(args.key, args.auth)
     elif args.command == 'stream':
@@ -56,7 +61,8 @@ def cli():
                     args.outfile, args.errfile)
     elif args.command == 'timelines':
         retrieve_timelines(args.key, args.auth, args.infile,
-                           args.outdir, args.errfile, min_utc)
+                           args.outdir, args.errfile, min_utc,
+                           not args.noretweets)
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'youtube':
