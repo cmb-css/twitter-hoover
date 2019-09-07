@@ -40,8 +40,12 @@ class Timelines():
         self.min_id = utc2snowflake(min_utc)
         self.max_id = None
         self.iter = 0
+        self.requests = 0
+        self.start_t = None
+        self.reqs_per_day = 0.
 
     def get_timeline(self, user_id, max_id):
+        self.requests += 1
         try:
             timeline = self.twitter.get_user_timeline(user_id=user_id,
                                                       include_rt=self.retweets,
@@ -76,7 +80,8 @@ class Timelines():
             max_id = self.max_id
             finished = False
             while not finished:
-                time.sleep(1)
+                if self.reqs_per_day > 99000.:
+                    time.sleep(1)
                 timeline = self.get_timeline(user_id, max_id - 1)
                 if timeline:
                     print('{} tweets received'.format(str(len(timeline))))
@@ -95,7 +100,13 @@ class Timelines():
                     f.write('{}\n'.format(json.dumps(tweet)))
             print('{} tweets found.'.format(len(tweets)))
 
+            delta_t = (time.time() - self.start_t) / (60. * 60. * 24.)
+            self.reqs_per_day = self.requests / delta_t
+            print('{} requests/day'.format(self.reqs_per_day))
+            print('{} users/day'.format(i / delta_t))
+
     def retrieve(self):
+        self.start_t = time.time()
         while True:
             self.max_id = utc2snowflake(utcnow())
             self._retrieve()
