@@ -103,7 +103,8 @@ class Timelines():
             delta_t = (time.time() - self.start_t) / (60. * 60. * 24.)
             self.reqs_per_day = self.requests / delta_t
             print('{} requests/day'.format(self.reqs_per_day))
-            print('{} users/day'.format(i / delta_t))
+            print('{} users/day'.format(
+                (self.iter * len(self.user_ids) + i) / delta_t))
 
     def retrieve(self):
         self.start_t = time.time()
