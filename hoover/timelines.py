@@ -80,7 +80,7 @@ class Timelines():
             max_id = self.max_id
             finished = False
             while not finished:
-                if self.reqs_per_day > 99000.:
+                if self.reqs_per_day > 95000.:
                     time.sleep(1)
                 timeline = self.get_timeline(user_id, max_id - 1)
                 if timeline:
