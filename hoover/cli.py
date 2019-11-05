@@ -35,7 +35,7 @@ def cli():
                         default=None)
     parser.add_argument('--noretweets', help='do not retrieve retweets',
                         action='store_true')
-    parser.add_argument('--user', type=str, help='user screenname or id',
+    parser.add_argument('--screen_name', type=str, help='user screenname',
                         default=None)
 
     args = parser.parse_args()
@@ -67,9 +67,9 @@ def cli():
                            args.outdir, args.errfile, min_utc,
                            not args.noretweets)
     elif args.command == 'friends':
-        retrieve_friends(args.key, args.auth, args.user, args.outfile)
+        retrieve_friends(args.key, args.auth, args.screen_name, args.outfile)
     elif args.command == 'followers':
-        retrieve_followers(args.key, args.auth, args.user, args.outfile)
+        retrieve_followers(args.key, args.auth, args.screen_name, args.outfile)
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'youtube':

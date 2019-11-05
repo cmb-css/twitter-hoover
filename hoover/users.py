@@ -7,16 +7,23 @@ class Users(RateControl):
         super().__init__()
         self.twitter = twython_from_key_and_auth(key_file, auth_file)
 
-    def retrieve(self, user, request_type, outfile):
+    def screen_name2id(self, screen_name):
+        self.pre_request(verbose=True)
+        response = self.twitter.lookup_user(screen_name=screen_name)
+        return response[0]['id']
+
+    def retrieve(self, screen_name, request_type, outfile):
+        user_id = self.screen_name2id(screen_name)
         ids = []
         cursor = -1
         while cursor != 0:
-            self.pre_request()
-            print('request #{}'.format(self.requests))
+            self.pre_request(verbose=True)
             if request_type == 'friends':
-                response = self.twitter.get_friends_ids(user_id=user)
+                response = self.twitter.get_friends_ids(user_id=user_id,
+                                                        cursor=cursor)
             elif request_type == 'followers':
-                response = self.twitter.get_followers_ids(user_id=user)
+                response = self.twitter.get_followers_ids(user_id=user_id,
+                                                          cursor=cursor)
             else:
                 raise RuntimeError(
                     'unknown request type "{}"'.format(request_type))
@@ -29,9 +36,9 @@ class Users(RateControl):
         print('{} found.'.format(len(ids)))
 
 
-def retrieve_friends(key_file, auth_file, user, outfile):
-    Users(key_file, auth_file).retrieve(user, 'friends', outfile)
+def retrieve_friends(key_file, auth_file, screen_name, outfile):
+    Users(key_file, auth_file).retrieve(screen_name, 'friends', outfile)
 
 
-def retrieve_followers(key_file, auth_file, user, outfile):
-    Users(key_file, auth_file).retrieve(user, 'followers', outfile)
+def retrieve_followers(key_file, auth_file, screen_name, outfile):
+    Users(key_file, auth_file).retrieve(screen_name, 'followers', outfile)

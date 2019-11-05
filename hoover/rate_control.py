@@ -8,11 +8,14 @@ class RateControl():
         self.start_t = None
         self.reqs_per_day = 0.
 
-    def pre_request(self):
+    def pre_request(self, verbose=False):
         if self.reqs_per_day > self.rate_limit:
             time.sleep(1)
 
         self.requests += 1
+
+        if verbose:
+            print('request #{}'.format(self.requests))
 
         if self.start_t is None:
             self.start_t = time.time()
