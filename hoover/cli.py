@@ -63,7 +63,7 @@ def cli():
         read_stream(args.key, args.auth, args.keywords,
                     args.outfile, args.errfile)
     elif args.command == 'timelines':
-        retrieve_timelines(args.key, args.auth, args.infile,
+        retrieve_timelines(args.key, args.auth, args.infile, args.screen_name,
                            args.outdir, args.errfile, min_utc,
                            not args.noretweets)
     elif args.command == 'friends':
