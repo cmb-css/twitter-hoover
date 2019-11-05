@@ -4,6 +4,7 @@ import calendar
 from hoover.auth import auth_app
 from hoover.stream import read_stream
 from hoover.timelines import retrieve_timelines
+from hoover.users import retrieve_friends, retrieve_followers
 from hoover.simple import simplify
 from hoover.youtube import extract_videos
 
@@ -34,6 +35,8 @@ def cli():
                         default=None)
     parser.add_argument('--noretweets', help='do not retrieve retweets',
                         action='store_true')
+    parser.add_argument('--user', type=str, help='user screenname or id',
+                        default=None)
 
     args = parser.parse_args()
 
@@ -63,6 +66,10 @@ def cli():
         retrieve_timelines(args.key, args.auth, args.infile,
                            args.outdir, args.errfile, min_utc,
                            not args.noretweets)
+    elif args.command == 'friends':
+        retrieve_friends(args.key, args.auth, args.user, args.outfile)
+    elif args.command == 'followers':
+        retrieve_followers(args.key, args.auth, args.user, args.outfile)
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'youtube':

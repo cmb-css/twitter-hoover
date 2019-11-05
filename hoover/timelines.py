@@ -1,10 +1,9 @@
 import os
-import time
 import csv
 import json
-from twython import Twython, TwythonError
-from hoover.auth import read_key_and_secret, read_token_secret_pin
+from hoover.auth import twython_from_key_and_auth
 from hoover.snowflake import *
+from hoover.rate_control import RateControl
 
 
 def get_user_ids(file):
@@ -28,24 +27,20 @@ def last_line(file):
         return None
 
 
-class Timelines():
+class Timelines(RateControl):
     def __init__(self, infile, outdir, errfile, min_utc, retweets,
-                 app_key, app_secret, oauth_token, oauth_token_secret):
+                 key_file, auth_file):
+        super().__init__()
         self.user_ids = get_user_ids(infile)
         self.outdir = outdir
         self.errfile = errfile
         self.retweets = retweets
-        self.twitter = Twython(app_key, app_secret,
-                               oauth_token, oauth_token_secret)
+        self.twitter = twython_from_key_and_auth(key_file, auth_file)
         self.min_id = utc2snowflake(min_utc)
         self.max_id = None
         self.iter = 0
-        self.requests = 0
-        self.start_t = None
-        self.reqs_per_day = 0.
 
     def get_timeline(self, user_id, max_id):
-        self.requests += 1
         try:
             timeline = self.twitter.get_user_timeline(user_id=user_id,
                                                       include_rt=self.retweets,
@@ -80,8 +75,7 @@ class Timelines():
             max_id = self.max_id
             finished = False
             while not finished:
-                if self.reqs_per_day > 95000.:
-                    time.sleep(1)
+                self.pre_request()
                 timeline = self.get_timeline(user_id, max_id - 1)
                 if timeline:
                     print('{} tweets received'.format(str(len(timeline))))
@@ -100,14 +94,11 @@ class Timelines():
                     f.write('{}\n'.format(json.dumps(tweet)))
             print('{} tweets found.'.format(len(tweets)))
 
-            delta_t = (time.time() - self.start_t) / (60. * 60. * 24.)
-            self.reqs_per_day = self.requests / delta_t
             print('{} requests/day'.format(self.reqs_per_day))
             print('{} users/day'.format(
                 (self.iter * len(self.user_ids) + i) / delta_t))
 
     def retrieve(self):
-        self.start_t = time.time()
         while True:
             self.max_id = utc2snowflake(utcnow())
             self._retrieve()
@@ -117,9 +108,6 @@ class Timelines():
 def retrieve_timelines(key_file, auth_file,
                        infile, outdir, errfile,
                        min_utc, retweets):
-    app_key, app_secret = read_key_and_secret(key_file)
-    oauth_token, oauth_token_secret = read_token_secret_pin(auth_file)
-
     timelines = Timelines(infile, outdir, errfile, min_utc, retweets,
-                          app_key, app_secret, oauth_token, oauth_token_secret)
+                          key_file, auth_file)
     timelines.retrieve()

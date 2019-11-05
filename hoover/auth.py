@@ -42,3 +42,10 @@ def auth_app(key_file, auth_file):
     # write token and secret to file
     write_token_secret(auth_file, oauth_token, oauth_token_secret)
     print('auth credentials written to: {}'.format(auth_file))
+
+
+def twython_from_key_and_auth(key_file, auth_file):
+    app_key, app_secret = read_key_and_secret(key_file)
+    oauth_token, oauth_token_secret = read_token_secret_pin(auth_file)
+
+    return Twython(app_key, app_secret, oauth_token, oauth_token_secret)
