@@ -1,6 +1,7 @@
 import os
 import csv
 import json
+from twython import TwythonError
 from hoover.auth import twython_from_key_and_auth
 from hoover.snowflake import *
 from hoover.rate_control import RateControl
@@ -94,9 +95,10 @@ class Timelines(RateControl):
                     f.write('{}\n'.format(json.dumps(tweet)))
             print('{} tweets found.'.format(len(tweets)))
 
-            print('{} requests/day'.format(self.reqs_per_day))
-            print('{} users/day'.format(
-                (self.iter * len(self.user_ids) + i) / delta_t))
+            if self.delta_t > 0.:
+                print('{} requests/day'.format(self.reqs_per_day))
+                print('{} users/day'.format(
+                    (self.iter * len(self.user_ids) + i) / self.delta_t))
 
     def retrieve(self):
         while True:
