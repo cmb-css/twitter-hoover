@@ -1,5 +1,5 @@
 # twitter-hoover
-Collect data from filtered Twitter streams.
+Retrieve data from Twitter.
 
 ## How to install
 
@@ -23,6 +23,12 @@ You will be give a URL to perform authorization. After you authorize the app on 
 
 ### Read a filtered stream into a local file
 
-`python -m hoover --keywords <keywords_file> --outfile <outfile> stream`
+`python -m hoover --infile <keywords_file> --outfile <outfile> stream`
 
 JSON data will be written to `<outfile>`. The stream will be filtered by the keywords or hashtags found in `<keywords_file>` (one keyword/hashtag per line).
+
+### Retrieve tweets from user timelines
+
+This allows for the retrieval of tweets from the timelines of users listed in an input file (one user_id per line):
+
+`python -m hoover --infile <keywords_file> --outdir <outdir> timelines`

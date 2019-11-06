@@ -29,8 +29,6 @@ def cli():
                         default='key-and-secret.txt')
     parser.add_argument('--auth', type=str, help='auth file',
                         default='auth.txt')
-    parser.add_argument('--keywords', type=str, help='hastags/keywords file',
-                        default=None)
     parser.add_argument('--mindate', type=str, help='earliest date for tweets',
                         default=None)
     parser.add_argument('--noretweets', help='do not retrieve retweets',
@@ -42,8 +40,6 @@ def cli():
 
     if args.infile:
         print('input file: {}'.format(args.infile))
-    if args.keywords:
-        print('keywords file: {}'.format(args.keywords))
     if args.outfile:
         print('output file: {}'.format(args.outfile))
     if args.outdir:
@@ -60,7 +56,7 @@ def cli():
     if args.command == 'auth':
         auth_app(args.key, args.auth)
     elif args.command == 'stream':
-        read_stream(args.key, args.auth, args.keywords,
+        read_stream(args.key, args.auth, args.infile,
                     args.outfile, args.errfile)
     elif args.command == 'timelines':
         retrieve_timelines(args.key, args.auth, args.infile, args.screen_name,
