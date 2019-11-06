@@ -2,7 +2,7 @@ import time
 
 
 class RateControl():
-    def __init__(self, rate_limit=80000):
+    def __init__(self, rate_limit=95000):
         self.rate_limit = float(rate_limit)
         self.requests = 0
         self.start_t = None
