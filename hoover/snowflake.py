@@ -16,7 +16,6 @@ import calendar
 
 def str2utc(s):
     # parse twitter time string into UTC seconds, unix-style
-    # python's bizarro world of dates, times and calendars
     return calendar.timegm(time.strptime(s, "%a %b %d %H:%M:%S +0000 %Y"))
 
 

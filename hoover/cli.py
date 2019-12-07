@@ -22,6 +22,8 @@ def cli():
                         help='input file', default=None)
     parser.add_argument('--outfile', type=str,
                         help='output file', default=None)
+    parser.add_argument('--indir', type=str,
+                        help='input directory', default=None)
     parser.add_argument('--outdir', type=str,
                         help='output directory', default=None)
     parser.add_argument('--errfile', type=str,
@@ -36,6 +38,7 @@ def cli():
                         action='store_true')
     parser.add_argument('--screen_name', type=str, help='user screenname',
                         default=None)
+    parser.add_argument('--type', type=str, help='type', default=None)
 
     args = parser.parse_args()
 
@@ -43,6 +46,8 @@ def cli():
         print('input file: {}'.format(args.infile))
     if args.outfile:
         print('output file: {}'.format(args.outfile))
+    if args.indir:
+        print('input directory: {}'.format(args.indir))
     if args.outdir:
         print('output directory: {}'.format(args.outdir))
 
@@ -70,7 +75,7 @@ def cli():
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'csv':
-        to_csv(args.infile, args.outfile)
+        to_csv(args.infile, args.outfile, args.indir, args.outdir, args.type)
     elif args.command == 'youtube':
         extract_videos(args.infile)
     else:
