@@ -84,13 +84,13 @@ def tweets_to_csv(tweets, outfile, csv_type='all', user_data=True):
     return 1
 
 
-def occurrences(occurrences_name, tweets, outfile, user_data):
+def hashtags(tweets, outfile, user_data):
     counts = {}
     for tweet in tweets:
         user = tweet['user_screen_name']
         if user not in counts:
             counts[user] = {}
-        for occurrence in tweet[occurrences_name]:
+        for occurrence in tweet['hashtags']:
             if occurrence not in counts[user]:
                 counts[user][occurrence] = 0
             counts[user][occurrence] += 1
@@ -98,9 +98,9 @@ def occurrences(occurrences_name, tweets, outfile, user_data):
     if len(counts) == 0:
         return 0
 
-    fields = ('target', 'occurrences')
+    fields = ('hashtag', 'occurrences')
     if user_data:
-        fields = ('origin',) + fields
+        fields = ('user',) + fields
 
     with open(outfile, 'w') as outfile:
         csvwriter = csv.writer(outfile)
@@ -108,20 +108,45 @@ def occurrences(occurrences_name, tweets, outfile, user_data):
 
         for user in counts:
             for occurrence in counts[user]:
-                row = {'origin': user,
-                       'target': occurrence,
+                row = {'user': user,
+                       'hashtag': occurrence,
                        'occurrences': counts[user][occurrence]}
                 csvwriter.writerow([row[field] for field in fields])
 
     return 1
 
 
-def hashtags(tweets, outfile, user_data):
-    return occurrences('hashtags', tweets, outfile, user_data)
-
-
 def mentions(tweets, outfile, user_data):
-    return occurrences('mentions', tweets, outfile, user_data)
+    counts = {}
+    for tweet in tweets:
+        user = tweet['user_screen_name']
+        if user not in counts:
+            counts[user] = {}
+        for occurrence in tweet['mentions']:
+            if occurrence not in counts[user]:
+                counts[user][occurrence] = 0
+            counts[user][occurrence] += 1
+
+    if len(counts) == 0:
+        return 0
+
+    fields = ('mentioned_id', 'mentioned_screen_name', 'occurrences')
+    if user_data:
+        fields = ('user',) + fields
+
+    with open(outfile, 'w') as outfile:
+        csvwriter = csv.writer(outfile)
+        csvwriter.writerow(fields)
+
+        for user in counts:
+            for occurrence in counts[user]:
+                row = {'user': user,
+                       'mentioned_id': occurrence[0],
+                       'mentioned_screen_name': occurrence[1],
+                       'occurrences': counts[user][occurrence]}
+                csvwriter.writerow([row[field] for field in fields])
+
+    return 1
 
 
 def json_file_to_csv(infile, outfile, csv_type='all', user_data=True):

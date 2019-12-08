@@ -1,20 +1,10 @@
 import os
-import csv
 import json
 from twython import TwythonError
 from hoover.auth import twython_from_key_and_auth
 from hoover.snowflake import *
 from hoover.rate_control import RateControl
-from hoover.users import Users
-
-
-def get_user_ids(file):
-    user_ids = []
-    with open(file) as csvfile:
-        csv_reader = csv.reader(csvfile)
-        for row in csv_reader:
-            user_ids.append(row[0])
-    return user_ids
+from hoover.users import Users, get_user_ids
 
 
 def last_line(file):
@@ -30,16 +20,16 @@ def last_line(file):
 
 
 class Timelines(RateControl):
-    def __init__(self, infile, screen_name, outdir, errfile, min_utc, retweets,
+    def __init__(self, infile, user, outdir, errfile, min_utc, retweets,
                  key_file, auth_file):
         super().__init__()
         if infile is not None:
             self.user_ids = get_user_ids(infile)
-        elif screen_name is not None:
-            user_id = Users(key_file, auth_file).screen_name2id(screen_name)
+        elif user is not None:
+            user_id = Users(key_file, auth_file).user2id(user)
             self.user_ids = [user_id]
         else:
-            raise RuntimeError('Provide either infile or screen_name.')
+            raise RuntimeError('Provide either --infile or --user.')
         self.outdir = outdir
         self.errfile = errfile
         self.retweets = retweets
@@ -115,8 +105,8 @@ class Timelines(RateControl):
 
 
 def retrieve_timelines(key_file, auth_file,
-                       infile, screen_name, outdir, errfile,
+                       infile, user, outdir, errfile,
                        min_utc, retweets):
-    timelines = Timelines(infile, screen_name, outdir, errfile, min_utc,
+    timelines = Timelines(infile, user, outdir, errfile, min_utc,
                           retweets, key_file, auth_file)
     timelines.retrieve()

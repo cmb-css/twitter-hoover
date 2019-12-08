@@ -38,7 +38,7 @@ def read_simple(infile):
                 'hashtags': tuple(item['text']
                                   for item
                                   in data['entities']['hashtags']),
-                'mentions': tuple(item['screen_name']
+                'mentions': tuple((item['id'], item['screen_name'])
                                   for item
                                   in data['entities']['user_mentions'])
             }

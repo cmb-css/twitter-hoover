@@ -36,7 +36,7 @@ def cli():
                         default=None)
     parser.add_argument('--noretweets', help='do not retrieve retweets',
                         action='store_true')
-    parser.add_argument('--screen_name', type=str, help='user screenname',
+    parser.add_argument('--user', type=str, help='user screen name or id',
                         default=None)
     parser.add_argument('--type', type=str, help='type', default=None)
 
@@ -65,13 +65,15 @@ def cli():
         read_stream(args.key, args.auth, args.infile,
                     args.outfile, args.errfile)
     elif args.command == 'timelines':
-        retrieve_timelines(args.key, args.auth, args.infile, args.screen_name,
+        retrieve_timelines(args.key, args.auth, args.infile, args.user,
                            args.outdir, args.errfile, min_utc,
                            not args.noretweets)
     elif args.command == 'friends':
-        retrieve_friends(args.key, args.auth, args.screen_name, args.outfile)
+        retrieve_friends(args.key, args.auth, args.user, args.outfile,
+                         args.infile, args.outdir)
     elif args.command == 'followers':
-        retrieve_followers(args.key, args.auth, args.screen_name, args.outfile)
+        retrieve_followers(args.key, args.auth, args.user, args.outfile,
+                           args.infile, args.outdir)
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'csv':
