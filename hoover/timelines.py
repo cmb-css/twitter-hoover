@@ -92,7 +92,7 @@ class Timelines(RateControl):
                     f.write('{}\n'.format(json.dumps(tweet)))
             print('{} tweets found.'.format(len(tweets)))
 
-            if self.delta_t > 0.:
+            if self.delta_t:
                 print('{} requests/day'.format(self.reqs_per_day))
                 print('{} users/day'.format(
                     (self.iter * len(self.user_ids) + i) / self.delta_t))
