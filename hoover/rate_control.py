@@ -2,16 +2,22 @@ import time
 
 
 class RateControl():
-    def __init__(self, rate_limit=95000):
-        self.rate_limit = float(rate_limit)
+    # rate limit in requests per 15 min.
+    def __init__(self, rate_limit):
+        self.rate_limit = float(rate_limit) * 4. * 24.
         self.requests = 0
         self.start_t = None
-        self.delta_t = 0.
+        self.delta_t = None
         self.reqs_per_day = 0.
 
     def pre_request(self, verbose=False):
         if self.reqs_per_day > self.rate_limit:
-            time.sleep(1)
+            if self.delta_t:
+                delta_t = self.requests / self.rate_limit
+                t = (delta_t - self.delta_t) * (60. * 60. * 24.)
+                time.sleep(t)
+            else:
+                time.sleep(1)
 
         self.requests += 1
 

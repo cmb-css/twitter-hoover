@@ -16,7 +16,7 @@ def get_user_ids(file):
 
 class Users(RateControl):
     def __init__(self, key_file, auth_file):
-        super().__init__(rate_limit=10000)
+        super().__init__(rate_limit=14)
         self.twitter = twython_from_key_and_auth(key_file, auth_file)
 
     def screen_name2id(self, screen_name):
@@ -52,7 +52,7 @@ class Users(RateControl):
             with open(outfile, 'w') as f:
                 f.write('\n'.join([str(x) for x in ids]))
                 f.write('\n')
-            print('{} {} found.'.format(entity_type, len(ids)))
+            print('{} {} found.'.format(len(ids), entity_type))
         except TwythonError as e:
             print('ERROR: {}'.format(e))
 
@@ -72,12 +72,13 @@ def retrieve(entity_type, key_file, auth_file,
                 'Only one of --user and --infile can be provided.')
         if not outdir:
             raise RuntimeError('--outdir must be provided.')
+        users = Users(key_file, auth_file)
         user_ids = get_user_ids(infile)
         for user_id in user_ids:
             print('Retrieving {} for user {}.'.format(entity_type, user_id))
             outfile = '{}-{}.csv'.format(user_id, entity_type)
             outfile = os.path.join(outdir, outfile)
-            Users(key_file, auth_file).retrieve(user_id, entity_type, outfile)
+            users.retrieve(user_id, entity_type, outfile)
     else:
         raise RuntimeError(
             'Either --user or --infile must be provided.')
