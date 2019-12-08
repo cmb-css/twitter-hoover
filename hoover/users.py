@@ -1,8 +1,24 @@
 import csv
 import os.path
 from twython import TwythonError
+from hoover.snowflake import str2utc
 from hoover.auth import twython_from_key_and_auth
 from hoover.rate_control import RateControl
+
+
+USER_FIELDS = ('id',
+               'screen_name',
+               'name',
+               'location',
+               'protected',
+               'verified',
+               'followers_count',
+               'friends_count',
+               'listed_count',
+               'favourites_count',
+               'statuses_count',
+               'created_at',
+               'created_ts')
 
 
 def get_user_ids(file):
@@ -10,7 +26,11 @@ def get_user_ids(file):
     with open(file) as csvfile:
         csv_reader = csv.reader(csvfile)
         for row in csv_reader:
-            user_ids.append(row[0])
+            try:
+                user_id = int(row[0])
+                user_ids.append(user_id)
+            except ValueError:
+                pass
     return user_ids
 
 
@@ -33,26 +53,29 @@ class Users(RateControl):
     def retrieve(self, user, entity_type, outfile):
         try:
             user_id = self.user2id(user)
-            ids = []
+            users = []
             cursor = -1
             while cursor != 0:
                 self.pre_request(verbose=True)
                 if entity_type == 'friends':
-                    response = self.twitter.get_friends_ids(user_id=user_id,
-                                                            cursor=cursor)
+                    response = self.twitter.get_friends_list(user_id=user_id,
+                                                             cursor=cursor)
                 elif entity_type == 'followers':
-                    response = self.twitter.get_followers_ids(user_id=user_id,
-                                                              cursor=cursor)
+                    response = self.twitter.get_followers_list(user_id=user_id,
+                                                               cursor=cursor)
                 else:
                     raise RuntimeError(
                         'Unknown entity type: "{}".'.format(entity_type))
                 cursor = response['next_cursor']
-                ids += response['ids']
+                users += response['users']
 
-            with open(outfile, 'w') as f:
-                f.write('\n'.join([str(x) for x in ids]))
-                f.write('\n')
-            print('{} {} found.'.format(len(ids), entity_type))
+            with open(outfile, 'w') as outfile:
+                csvwriter = csv.writer(outfile)
+                csvwriter.writerow(USER_FIELDS)
+                for user in users:
+                    user['created_ts'] = str2utc(user['created_at'])
+                    csvwriter.writerow([user[field] for field in USER_FIELDS])
+            print('{} {} found.'.format(len(users), entity_type))
         except TwythonError as e:
             print('ERROR: {}'.format(e))
 
