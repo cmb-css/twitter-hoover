@@ -59,10 +59,12 @@ class Users(RateControl):
                 self.pre_request(verbose=True)
                 if entity_type == 'friends':
                     response = self.twitter.get_friends_list(user_id=user_id,
-                                                             cursor=cursor)
+                                                             cursor=cursor,
+                                                             count=200)
                 elif entity_type == 'followers':
                     response = self.twitter.get_followers_list(user_id=user_id,
-                                                               cursor=cursor)
+                                                               cursor=cursor,
+                                                               count=200)
                 else:
                     raise RuntimeError(
                         'Unknown entity type: "{}".'.format(entity_type))
