@@ -113,3 +113,17 @@ Or only one of them, if `--type` is specified.
 
 All the .csv files that directly list tweets (the first 5 types above) have the following columns: 'created_at', 'timestamp', 'id', 'text', 'retweet_count', 'favorite_count' and 'lang'. If the user who created the tweet is not speficied in the file name (this is the case when one input and one output file are directly specified, as in the first example of invocation of the command above), then two extra columns are present: 'user_id' and 'user_screen_name'. Files that contain replies include the columns: 'in_reply_to_status_id', 'in_reply_to_user_id' and 'in_reply_to_screen_name'. Files that contin tweets quoting parent tweets (retweets and quotes) include the column 'quoted_text'. Files  that contain retweets include the fileds: 'retweeted_id', 'retweeted_user_id' and 'retweeted_user_screen_name'. Files that contain quotes include the fileds: 'quoted_id', 'quoted_user_id' and 'quoted_user_screen_name'.
 
+### Simplify JSON (simplify)
+
+JSON objects produced by the JSON API to represent Tweets can be a bit complex. This converts them to a flatter, simpler JSON schema that might be simpler to user from many purposes:
+
+`hoover --infile <input file with Tweet JSON objects> --outfile <output .json file> simplify`
+
+### Extract YouTube videos (youtube)
+
+This command extracts all the URLs corresponding to YouTube videos from a list of Tweets in API JSON format (e.g. the ones outputted by the `stream` or `timelines` commands).
+
+`hoover --infile <input file with Tweets JSON objects> --outfile <output .csv file> youtube`
+
+
+The output files is a .csv file with two columns: video URL and number of occurrences.
