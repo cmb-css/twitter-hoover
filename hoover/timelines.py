@@ -22,7 +22,7 @@ def last_line(file):
 class Timelines(RateControl):
     def __init__(self, infile, user, outdir, errfile, min_utc, retweets,
                  key_file, auth_file):
-        super().__init__(rate_limit=1000)
+        super().__init__(rate_limit=900)
         if infile is not None:
             self.user_ids = get_user_ids(infile)
         elif user is not None:
