@@ -29,6 +29,7 @@ def _read_stream(key_file, auth_file, keywords_file, outfile, errfile):
     stream = HooverStreamer(outfile, errfile, app_key, app_secret,
                             oauth_token, oauth_token_secret)
     terms = create_filter(keywords_file)
+    print(terms)
     stream.statuses.filter(track=terms)
 
 

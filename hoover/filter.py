@@ -8,8 +8,9 @@ def clean_keyword(keyword):
 def read_keywords(file_path):
     with open(file_path, 'r') as file:
         data = file.read()
-    keywords = data.split()
-    keywords = [clean_keyword(keyword) for keyword in keywords]
+    keywords = data.split('\n')
+    keywords = [clean_keyword(keyword.strip()) for keyword in keywords
+                if len(keyword.strip()) > 0]
     return keywords
 
 
