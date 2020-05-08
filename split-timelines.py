@@ -56,5 +56,5 @@ if __name__ == '__main__':
             for month_year in tweets:
                 outfile = '{}/{}.json'.format(dirpath, month_year)
                 with open(outfile, 'wt') as of:
-                    of.write('\n'.join(tweets[month_year]))
+                    of.write(''.join(tweets[month_year]))
                 check_call(['gzip', outfile])
