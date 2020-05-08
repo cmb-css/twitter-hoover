@@ -1,5 +1,4 @@
 import os
-import json
 import glob
 from datetime import datetime
 import gzip
@@ -21,10 +20,9 @@ if __name__ == '__main__':
         tweets = defaultdict(list)
         with open(file_name, 'r') as f:
             for line in f.readlines():
-                data = json.loads(line)
-                ts = str2utc(data['created_at'])
+                ts = str2utc(line[16:46])
                 month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
-                tweets[month_year].append(json.dumps(data))
+                tweets[month_year].append(line)
             for month_year in tweets:
                 outfile = '{}/{}.json.gz'.format(dirpath, month_year)
                 with gzip.open(outfile, 'wt') as of:
