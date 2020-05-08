@@ -15,7 +15,7 @@ if __name__ == '__main__':
         base = os.path.basename(file_name)
         base = base.split('.')[0]
         dirpath = 'timelines-new/{}'.format(base)
-        os.makedir(dirpath)
+        os.mkdir(dirpath)
 
         with open(file_name, 'r') as f:
             last_month_year = None
