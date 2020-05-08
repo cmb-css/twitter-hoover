@@ -12,25 +12,25 @@ def date_str2month_year(date_str):
         month = '01'
     elif month_str == 'Feb':
         month = '02'
-    elif month_str == 'Feb':
+    elif month_str == 'Mar':
         month = '03'
-    elif month_str == 'Feb':
+    elif month_str == 'Apr':
         month = '04'
-    elif month_str == 'Feb':
+    elif month_str == 'May':
         month = '05'
-    elif month_str == 'Feb':
+    elif month_str == 'Jun':
         month = '06'
-    elif month_str == 'Feb':
+    elif month_str == 'Jul':
         month = '07'
-    elif month_str == 'Feb':
+    elif month_str == 'Aug':
         month = '08'
-    elif month_str == 'Feb':
+    elif month_str == 'Sep':
         month = '09'
-    elif month_str == 'Feb':
+    elif month_str == 'Oct':
         month = '10'
-    elif month_str == 'Feb':
+    elif month_str == 'Nov':
         month = '11'
-    elif month_str == 'Feb':
+    elif month_str == 'Dec':
         month = '12'
     else:
         raise RuntimeError('Unkown month: {}'.format(month_str))
