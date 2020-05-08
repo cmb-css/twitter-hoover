@@ -27,7 +27,6 @@ if __name__ == '__main__':
                 tweets[month_year].append(json.dumps(data))
             for month_year in tweets:
                 outfile = '{}/{}.json.gz'.format(dirpath, month_year)
-                # with gzip.open(outfile, 'wt') as of:
-                with open(outfile, 'wt') as of:
+                with gzip.open(outfile, 'wt') as of:
                     of.writelines('{}\n'.format(data)
                                   for data in tweets[month_year])
