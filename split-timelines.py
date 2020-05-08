@@ -58,3 +58,4 @@ if __name__ == '__main__':
                 with open(outfile, 'wt') as of:
                     of.write(''.join(tweets[month_year]))
                 check_call(['gzip', outfile])
+        check_call(['rm', file_name])
