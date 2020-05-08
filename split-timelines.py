@@ -20,7 +20,7 @@ if __name__ == '__main__':
         os.mkdir(dirpath)
 
         tweets = defaultdict(list)
-        with io.BufferedReader(open(file_name, 'r')) as f:
+        with open(file_name, 'r') as f:
             for line in f:
                 data = json.loads(line)
                 ts = str2utc(data['created_at'])
