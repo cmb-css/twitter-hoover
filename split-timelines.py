@@ -2,7 +2,6 @@ import os
 from subprocess import check_call
 import glob
 from datetime import datetime
-import gzip
 from collections import defaultdict
 from hoover.snowflake import str2utc
 

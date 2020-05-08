@@ -1,5 +1,7 @@
 import os
 import json
+import gzip
+from collections import defaultdict
 from twython import TwythonError
 from hoover.auth import twython_from_key_and_auth
 from hoover.snowflake import *
@@ -9,7 +11,7 @@ from hoover.users import Users, get_user_ids
 
 def last_line(file):
     try:
-        with open(file, 'rb') as f:
+        with gzip.open(file, 'rb') as f:
             f.readline()
             f.seek(-2, os.SEEK_END)
             while f.read(1) != b"\n":
@@ -52,10 +54,27 @@ class Timelines(RateControl):
             return None
 
     def _user_path(self, user_id):
-        return os.path.join(self.outdir, '{}.json'.format(str(user_id)))
+        return os.path.join(self.outdir, str(user_id))
+
+    def _cur_file(self, user_id):
+        file_names = glob.glob(self._user_path(user_id))
+        latest_file = None
+        for file_name in file_names:
+            max_date_month = 0
+            latest_file = None
+            base = os.path.basename(file_name)
+            base = base.split('.')[0]
+            date_month = int(base.replace('-', ''))
+            if date_month > max_date_month:
+                max_date_month = date_month
+                latest_file = file_name
+        return latest_file
 
     def _user_last_tweet_id(self, user_id):
-        ll = last_line(self._user_path(user_id))
+        cur_file = self._cur_file(user_id)
+        if cur_file is None:
+            return None
+        ll = last_line(cur_file)
         if ll is None:
             return None
         else:
@@ -86,10 +105,17 @@ class Timelines(RateControl):
                 else:
                     finished = True
             # write to file
-            file = self._user_path(user_id)
-            with open(file, 'a') as f:
-                for tweet in reversed(tweets):
-                    f.write('{}\n'.format(json.dumps(tweet)))
+            tweets_months = defaultdict(list)
+            for tweet in reversed(tweets):
+                ts = str2utc(tweet['created_at'])
+                month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
+                tweets_months[month_year].append(json.dumps(tweet))
+            for month_year in tweets_months:
+                outfile = '{}/{}.json.gz'.format(
+                    self._user_path(user_id), month_year)
+                with gzip.open(outfile, 'at') as of:
+                    of.write('\n'.join(tweets_months[month_year]))
+
             print('{} tweets found.'.format(len(tweets)))
 
             if self.delta_t:
