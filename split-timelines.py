@@ -1,4 +1,5 @@
 import os
+from subprocess import check_call
 import glob
 from datetime import datetime
 import gzip
@@ -24,6 +25,7 @@ if __name__ == '__main__':
                 month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
                 tweets[month_year].append(line)
             for month_year in tweets:
-                outfile = '{}/{}.json.gz'.format(dirpath, month_year)
-                with gzip.open(outfile, 'wt') as of:
+                outfile = '{}/{}.json'.format(dirpath, month_year)
+                with open(outfile, 'wt') as of:
                     of.write('\n'.join(tweets[month_year]))
+                check_call(['gzip', outfile])
