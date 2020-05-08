@@ -31,4 +31,5 @@ if __name__ == '__main__':
                     of = gzip.open(outfile, 'at')
                     last_month_year = month_year
                 of.write('{}\n'.format(json.dumps(data)))
-            of.close()
+            if of:
+                of.close()
