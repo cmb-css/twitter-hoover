@@ -1,3 +1,4 @@
+import io
 import os
 import json
 import glob
@@ -19,7 +20,7 @@ if __name__ == '__main__':
         os.mkdir(dirpath)
 
         tweets = defaultdict(list)
-        with open(file_name, 'r') as f:
+        with io.BufferedReader(open(file_name, 'r')) as f:
             for line in f:
                 data = json.loads(line)
                 ts = str2utc(data['created_at'])
@@ -27,6 +28,6 @@ if __name__ == '__main__':
                 tweets[month_year].append(data)
             for month_year in tweets:
                 outfile = '{}/{}.json.gz'.format(dirpath, month_year)
-                with gzip.open(outfile, 'wt') as of:
+                with io.BufferedWriter(gzip.open(outfile, 'wt')) as of:
                     for data in tweets[month_year]:
                         of.write('{}\n'.format(json.dumps(data)))
