@@ -3,6 +3,7 @@ import json
 import glob
 from datetime import datetime
 import gzip
+from collections import defaultdict
 from hoover.snowflake import str2utc
 
 
@@ -17,19 +18,15 @@ if __name__ == '__main__':
         dirpath = 'timelines-new/{}'.format(base)
         os.mkdir(dirpath)
 
+        tweets = defaultdict(list)
         with open(file_name, 'r') as f:
-            last_month_year = None
-            of = None
             for line in f:
                 data = json.loads(line)
                 ts = str2utc(data['created_at'])
                 month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
-                if last_month_year != month_year:
-                    if of:
-                        of.close()
-                    outfile = '{}/{}.json.gz'.format(dirpath, month_year)
-                    of = gzip.open(outfile, 'at')
-                    last_month_year = month_year
-                of.write('{}\n'.format(json.dumps(data)))
-            if of:
-                of.close()
+                tweets[month_year].append(data)
+            for month_year in tweets:
+                outfile = '{}/{}.json.gz'.format(dirpath, month_year)
+                with gzip.open(outfile, 'wt') as of:
+                    for data in tweets[month_year]:
+                        of.write('{}\n'.format(json.dumps(data)))
