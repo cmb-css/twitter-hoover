@@ -1,9 +1,40 @@
 import os
 from subprocess import check_call
 import glob
-from datetime import datetime
 from collections import defaultdict
-from hoover.snowflake import str2utc
+
+
+def date_str2month_year(date_str):
+    month_str = date_str[4:7]
+    year_str = date_str[-4:]
+    month = ''
+    if month_str == 'Jan':
+        month = '01'
+    elif month_str == 'Feb':
+        month = '02'
+    elif month_str == 'Feb':
+        month = '03'
+    elif month_str == 'Feb':
+        month = '04'
+    elif month_str == 'Feb':
+        month = '05'
+    elif month_str == 'Feb':
+        month = '06'
+    elif month_str == 'Feb':
+        month = '07'
+    elif month_str == 'Feb':
+        month = '08'
+    elif month_str == 'Feb':
+        month = '09'
+    elif month_str == 'Feb':
+        month = '10'
+    elif month_str == 'Feb':
+        month = '11'
+    elif month_str == 'Feb':
+        month = '12'
+    else:
+        raise RuntimeError('Unkown month: {}'.format(month_str))
+    return '{}-{}'.format(year_str, month)
 
 
 if __name__ == '__main__':
@@ -20,8 +51,7 @@ if __name__ == '__main__':
         tweets = defaultdict(list)
         with open(file_name, 'r') as f:
             for line in f.readlines():
-                ts = str2utc(line[16:46])
-                month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
+                month_year = date_str2month_year(line[16:46])
                 tweets[month_year].append(line)
             for month_year in tweets:
                 outfile = '{}/{}.json'.format(dirpath, month_year)
