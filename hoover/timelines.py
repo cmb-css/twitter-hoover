@@ -60,16 +60,16 @@ class Timelines(RateControl):
 
     def _cur_file(self, user_id):
         file_names = glob.glob(self._user_path(user_id))
+        max_date_month = 0
         latest_file = None
         for file_name in file_names:
-            max_date_month = 0
-            latest_file = None
             base = os.path.basename(file_name)
             base = base.split('.')[0]
             date_month = int(base.replace('-', ''))
             if date_month > max_date_month:
                 max_date_month = date_month
                 latest_file = file_name
+        print('latest_file: {}'.format(latest_file))
         return latest_file
 
     def _user_last_tweet_id(self, user_id):
@@ -81,6 +81,7 @@ class Timelines(RateControl):
             return None
         else:
             tweet = json.loads(ll)
+            print('latest_time: {}'.format(tweet['created_at']))
             return tweet['id']
 
     def _retrieve(self):
@@ -112,11 +113,11 @@ class Timelines(RateControl):
                 ts = str2utc(tweet['created_at'])
                 month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
                 tweets_months[month_year].append(json.dumps(tweet))
-            for month_year in tweets_months:
-                outfile = '{}/{}.json.gz'.format(
-                    self._user_path(user_id), month_year)
-                with gzip.open(outfile, 'at') as of:
-                    of.write('\n'.join(tweets_months[month_year]))
+            # for month_year in tweets_months:
+                # outfile = '{}/{}.json.gz'.format(
+                #     self._user_path(user_id), month_year)
+                # with gzip.open(outfile, 'at') as of:
+                #     of.write('\n'.join(tweets_months[month_year]))
 
             print('{} tweets found.'.format(len(tweets)))
 
