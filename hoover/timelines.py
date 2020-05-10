@@ -59,7 +59,8 @@ class Timelines(RateControl):
         return os.path.join(self.outdir, str(user_id))
 
     def _cur_file(self, user_id):
-        file_names = glob.glob(self._user_path(user_id))
+        file_names = glob.glob(
+            os.path.join(self._user_path(user_id), '*.json.gz'))
         max_date_month = 0
         latest_file = None
         for file_name in file_names:
