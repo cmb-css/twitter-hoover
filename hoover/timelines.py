@@ -2,6 +2,7 @@ import os
 import glob
 import json
 import gzip
+from datetime import datetime
 from collections import defaultdict
 from twython import TwythonError
 from hoover.auth import twython_from_key_and_auth
@@ -84,8 +85,8 @@ class Timelines(RateControl):
 
     def _retrieve(self):
         for i, user_id in enumerate(self.user_ids):
-            print('[iter: {}] processing user #{}/{}...'.format(
-                self.iter, i, len(self.user_ids)))
+            print('[iter: {}] processing user {} #{}/{}...'.format(
+                self.iter, user_id, i, len(self.user_ids)))
             tweets = []
             min_id = self._user_last_tweet_id(user_id)
             if min_id is None:
