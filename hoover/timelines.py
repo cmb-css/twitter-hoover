@@ -13,12 +13,11 @@ from datetime import datetime
 
 def last_line(file):
     try:
-        with gzip.open(file, 'rb') as f:
-            f.readline()
-            f.seek(-2, os.SEEK_END)
-            while f.read(1) != b"\n":
-                f.seek(-2, os.SEEK_CUR)
-            return f.readline().decode().strip()
+        with gzip.open(file, 'rt') as f:
+            last_line = None
+            for line in f:
+                last_line = line
+            return last_line
     except OSError:
         return None
 
@@ -114,11 +113,11 @@ class Timelines(RateControl):
                 ts = str2utc(tweet['created_at'])
                 month_year = datetime.utcfromtimestamp(ts).strftime('%Y-%m')
                 tweets_months[month_year].append(json.dumps(tweet))
-            # for month_year in tweets_months:
-                # outfile = '{}/{}.json.gz'.format(
-                #     self._user_path(user_id), month_year)
-                # with gzip.open(outfile, 'at') as of:
-                #     of.write('\n'.join(tweets_months[month_year]))
+            for month_year in tweets_months:
+                outfile = '{}/{}.json.gz'.format(
+                    self._user_path(user_id), month_year)
+                with gzip.open(outfile, 'at') as of:
+                    of.write('\n'.join(tweets_months[month_year]))
 
             print('{} tweets found.'.format(len(tweets)))
 
