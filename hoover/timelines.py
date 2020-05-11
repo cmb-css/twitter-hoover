@@ -1,3 +1,4 @@
+import sys
 import os
 import glob
 import json
@@ -87,6 +88,7 @@ class Timelines(RateControl):
             except Exception:
                 print('$$$$')
                 print(ll)
+                sys.exit()
 
     def _retrieve(self):
         for i, user_id in enumerate(self.user_ids):
