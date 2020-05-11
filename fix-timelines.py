@@ -46,11 +46,12 @@ class FixTimeline(object):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
             cur_file = self._cur_file(user_id)
-            with gzip.open(cur_file, 'rt') as f:
-                for line in f:
-                    parts = json_split(line)
-                    if len(parts) > 1:
-                        print(parts)
+            if cur_file:
+                with gzip.open(cur_file, 'rt') as f:
+                    for line in f:
+                        parts = json_split(line)
+                        if len(parts) > 1:
+                            print(parts)
 
 
 if __name__ == '__main__':
