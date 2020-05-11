@@ -1,12 +1,12 @@
 import os
 import glob
 import gzip
-from hoover.snowflake import *
 from hoover.users import get_user_ids
 
 
 def json_split(json_str):
     parts = []
+    depth = 0
     for i, c in enumerate(json_str):
         part = ''
         part += c
