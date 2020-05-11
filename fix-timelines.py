@@ -2,7 +2,6 @@ import os
 import glob
 import gzip
 from hoover.snowflake import *
-from hoover.rate_control import RateControl
 from hoover.users import get_user_ids
 
 
@@ -19,7 +18,7 @@ def json_split(json_str):
             parts.append(part)
 
 
-class FixTimeline(RateControl):
+class FixTimeline(object):
     def __init__(self, infile, outdir):
         self.user_ids = get_user_ids(infile)
         self.outdir = outdir
