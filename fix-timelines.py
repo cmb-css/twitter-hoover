@@ -5,6 +5,8 @@ from hoover.users import get_user_ids
 
 
 def json_split(json_str):
+    if len(json_str.split('}{')) == 1:
+        return [json_str.strip()]
     parts = []
     depth = 0
     part = ''
