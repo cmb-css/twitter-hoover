@@ -16,6 +16,7 @@ def json_split(json_str):
             depth -= 1
         if depth == 0:
             parts.append(part)
+    return parts
 
 
 class FixTimeline(object):
