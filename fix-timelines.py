@@ -61,7 +61,7 @@ class FixTimeline(object):
                             damaged = True
                 if damaged:
                     print('damaged')
-                    with gzip.open(cur_file, 'rt') as f:
+                    with gzip.open(cur_file, 'wt') as f:
                         for line in lines:
                             f.write('{}\n'.format(line))
                 else:
