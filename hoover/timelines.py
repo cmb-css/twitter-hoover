@@ -80,9 +80,13 @@ class Timelines(RateControl):
         if ll is None:
             return None
         else:
-            tweet = json.loads(ll)
-            print('latest_time: {}'.format(tweet['created_at']))
-            return tweet['id']
+            try:
+                tweet = json.loads(ll)
+                print('latest_time: {}'.format(tweet['created_at']))
+                return tweet['id']
+            except e:
+                print('$$$$')
+                print(ll)
 
     def _retrieve(self):
         for i, user_id in enumerate(self.user_ids):
