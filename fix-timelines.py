@@ -7,8 +7,8 @@ from hoover.users import get_user_ids
 def json_split(json_str):
     parts = []
     depth = 0
+    part = ''
     for i, c in enumerate(json_str.strip()):
-        part = ''
         part += c
         if c == '{':
             depth += 1
@@ -16,6 +16,7 @@ def json_split(json_str):
             depth -= 1
         if depth == 0:
             parts.append(part)
+            part = ''
     return parts
 
 
