@@ -81,14 +81,9 @@ class Timelines(RateControl):
         if ll is None:
             return None
         else:
-            try:
-                tweet = json.loads(ll)
-                print('latest_time: {}'.format(tweet['created_at']))
-                return tweet['id']
-            except Exception:
-                print('$$$$')
-                print(ll)
-                sys.exit()
+            tweet = json.loads(ll)
+            print('latest_time: {}'.format(tweet['created_at']))
+            return tweet['id']
 
     def _retrieve(self):
         for i, user_id in enumerate(self.user_ids):
@@ -123,7 +118,8 @@ class Timelines(RateControl):
                 outfile = '{}/{}.json.gz'.format(
                     self._user_path(user_id), month_year)
                 with gzip.open(outfile, 'at') as of:
-                    of.write('\n'.join(tweets_months[month_year]))
+                    for tweet in tweets_months[month_year]:
+                        of.write('{}\n'.format(tweet))
 
             print('{} tweets found.'.format(len(tweets)))
 
