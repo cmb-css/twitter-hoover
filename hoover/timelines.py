@@ -84,7 +84,7 @@ class Timelines(RateControl):
                 tweet = json.loads(ll)
                 print('latest_time: {}'.format(tweet['created_at']))
                 return tweet['id']
-            except e:
+            except Exception:
                 print('$$$$')
                 print(ll)
 
