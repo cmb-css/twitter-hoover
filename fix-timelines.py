@@ -51,11 +51,18 @@ class FixTimeline(object):
                 user_id, i, len(self.user_ids)))
             cur_file = self._cur_file(user_id)
             if cur_file:
+                damaged = False
+                lines = []
                 with gzip.open(cur_file, 'rt') as f:
                     for line in f:
                         parts = json_split(line)
+                        lines += parts
                         if len(parts) > 1:
-                            print(parts)
+                            damaged = True
+                if damaged:
+                    print('damaged')
+                else:
+                    print('ok')
 
 
 if __name__ == '__main__':
