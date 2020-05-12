@@ -118,8 +118,8 @@ class Timelines(RateControl):
                 outfile = '{}/{}.json.gz'.format(
                     self._user_path(user_id), month_year)
                 with gzip.open(outfile, 'at') as of:
-                    for tweet in tweets_months[month_year]:
-                        of.write('{}\n'.format(tweet))
+                    for tweet_json in tweets_months[month_year]:
+                        print(tweet_json, file=of)
 
             print('{} tweets found.'.format(len(tweets)))
 
