@@ -52,6 +52,7 @@ class FixTimeline(object):
             cur_file = self._cur_file(user_id)
             if cur_file:
                 damaged = False
+                ends_in_newline = False
                 lines = []
                 with gzip.open(cur_file, 'rt') as f:
                     for line in f:
@@ -59,11 +60,16 @@ class FixTimeline(object):
                         lines += parts
                         if len(parts) > 1:
                             damaged = True
+                        ends_in_newline = line[-1] == '\n'
                 if damaged:
                     print('damaged')
                     with gzip.open(cur_file, 'wt') as f:
                         for line in lines:
                             f.write('{}\n'.format(line))
+                elif not ends_in_newline:
+                    print('add newline')
+                    with gzip.open(cur_file, 'at') as f:
+                        f.write('\n')
                 else:
                     print('ok')
 
