@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     for i, dir_name in enumerate(dir_names):
         print('[{}/{}] {}'.format(i, n, dir_name))
-        user_id = os.path.basename(file_name)
+        user_id = os.path.basename(dir_name)
         file_name = 'timelines/{}/{}.json.gz'.format(user_id, YEAR_MONTH)
 
         try:
