@@ -18,7 +18,8 @@ if __name__ == '__main__':
             try:
                 with gzip.open(file_name, 'rt') as f:
                     for line in f.readlines():
-                        output_file.write(line)
+                        if '"lang": "de"' in line:
+                            output_file.write(line)
             except FileNotFoundError:
                 pass
     print('done.')
