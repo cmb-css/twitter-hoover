@@ -1,7 +1,6 @@
-import os
-from subprocess import check_call
 import glob
-from collections import defaultdict
+import gzip
+import os
 
 
 YEAR_MONTH = '2020-03'
@@ -19,7 +18,7 @@ if __name__ == '__main__':
         file_name = 'timelines/{}/{}.json.gz'.format(user_id, YEAR_MONTH)
 
         try:
-            with open(file_name, 'r') as f:
+            with gzip.open(file_name, 'r') as f:
                 for line in f.readlines():
                     count += 1
         except FileNotFoundError:
