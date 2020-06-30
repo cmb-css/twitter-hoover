@@ -47,7 +47,8 @@ class Timelines(RateControl):
             timeline = self.twitter.get_user_timeline(user_id=user_id,
                                                       include_rt=self.retweets,
                                                       max_id=max_id,
-                                                      count=200)
+                                                      count=200,
+                                                      tweet_mode='extended')
             return timeline
         except TwythonError as e:
             print('ERROR: {}'.format(e))
