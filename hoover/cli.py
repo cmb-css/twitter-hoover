@@ -8,6 +8,7 @@ from hoover.users import retrieve_friends, retrieve_followers
 from hoover.simple import simplify
 from hoover.csv import to_csv
 from hoover.youtube import extract_videos
+from hoover.hydrate import hydrate_file
 
 
 def ddmmyy2utc(s):
@@ -80,5 +81,8 @@ def cli():
         to_csv(args.infile, args.outfile, args.indir, args.outdir, args.type)
     elif args.command == 'youtube':
         extract_videos(args.infile)
+    elif args.command == 'hydrate':
+        hydrate_file(args.key, args.auth, args.infile, args.outfile,
+                     args.errfile)
     else:
         print('Unknown command: {}'.format(args.command))
