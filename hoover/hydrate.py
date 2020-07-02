@@ -28,7 +28,7 @@ def json_split(json_str):
 
 class Hydrate(RateControl):
     def __init__(self, infile, outfile, errfile, key_file, auth_file):
-        super().__init__(rate_limit=300)
+        super().__init__(rate_limit=800)
         self.infile = infile
         self.outfile = outfile
         self.errfile = errfile
@@ -73,7 +73,7 @@ class Hydrate(RateControl):
                             ids.append(tweet['id_str'])
                         else:
                             tweets.append(tweet)
-                            if len(ids) >= 100:
+                            if len(ids) >= 90:
                                 self._hydrate_and_write(ids, tweets)
                                 ids = []
                                 tweets = []
