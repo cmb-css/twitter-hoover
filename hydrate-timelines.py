@@ -34,6 +34,7 @@ class HydrateTimelines(object):
                         os.remove(outfile)
                     except OSError:
                         pass
+                    print('infile: {}\noutfile: {}'.format(infile, outfile))
                     hydrate_file('key-and-secret.txt', 'auth.txt',
                                  infile, outfile, 'error.log')
 
