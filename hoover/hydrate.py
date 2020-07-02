@@ -48,8 +48,11 @@ class Hydrate(RateControl):
             return None
 
     def _hydrate_and_write(self, truncated_ids, non_truncated_tweets):
-        self.pre_request()
-        tweets = self.get_tweets(truncated_ids)
+        if len(truncated_ids) > 0:
+            self.pre_request()
+            tweets = self.get_tweets(truncated_ids)
+        else:
+            tweets = []
         print('{} tweets retrieved, {} tweets lost.'.format(
             len(tweets), len(truncated_ids) - len(tweets)))
         tweets += non_truncated_tweets
