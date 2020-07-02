@@ -67,7 +67,11 @@ class Hydrate(RateControl):
         with gzip.open(self.infile, 'rt') as f:
             for line in f.readlines():
                 for json_str in json_split(line):
-                    tweet = json.loads(json_str)
+                    try:
+                        tweet = json.loads(json_str)
+                    except:
+                        print(json_str)
+                        json.loads(json_str)
                 if tweet['truncated']:
                     ids.append(tweet['id_str'])
                 else:
