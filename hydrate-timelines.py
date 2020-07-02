@@ -22,10 +22,17 @@ class HydrateTimelines(object):
             os.path.join(self._user_path(user_id), '*.json.gz'))
         return file_names
 
+    def _remove_hydrated(self, user_id):
+        file_names = glob.glob(
+            os.path.join(self._user_path(user_id), '*hydrated*.json.gz'))
+        for file in file_names:
+            os.remove(file)
+
     def hydrate(self):
         for i, user_id in enumerate(self.user_ids):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
+            self._remove_hydrated(user_id)
             for infile in self._user_files(user_id):
                 # TODO: temporary hack
                 if '-07.json.gz' not in infile:
