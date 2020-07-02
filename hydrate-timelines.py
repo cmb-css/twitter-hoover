@@ -27,7 +27,7 @@ class HydrateTimelines(object):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
             for infile in self._user_files(user_id):
-                oufile = new_file_name(infile)
+                outfile = new_file_name(infile)
                 try:
                     os.remove(outfile)
                 except OSError:
