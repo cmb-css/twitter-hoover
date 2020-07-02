@@ -26,8 +26,12 @@ class HydrateTimelines(object):
         for i, user_id in enumerate(self.user_ids):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
-            for infile in self._user_files:
+            for infile in self._user_files():
                 oufile = new_file_name(infile)
+                try:
+                    os.remove(outfile)
+                except OSError:
+                    pass
                 hydrate_file('key-and-secret.txt', 'auth.txt',
                              infile, outfile, 'error.log')
 
