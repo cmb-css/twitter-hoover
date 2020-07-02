@@ -28,7 +28,7 @@ def json_split(json_str):
 
 class Hydrate(RateControl):
     def __init__(self, infile, outfile, errfile, key_file, auth_file):
-        super().__init__(rate_limit=900)
+        super().__init__(rate_limit=300)
         self.infile = infile
         self.outfile = outfile
         self.errfile = errfile
