@@ -42,6 +42,7 @@ class Hydrate(RateControl):
                                                 tweet_mode='extended')
             return tweets
         except TwythonError as e:
+            print('*** {}'.len(tweet_ids))
             print('ERROR: {}'.format(e))
             with open(self.errfile, 'a') as file:
                 file.write('ERROR: {}\n'.format(e))
@@ -73,7 +74,7 @@ class Hydrate(RateControl):
                             ids.append(tweet['id_str'])
                         else:
                             tweets.append(tweet)
-                            if len(ids) >= 90:
+                            if len(ids) >= 100:
                                 self._hydrate_and_write(ids, tweets)
                                 ids = []
                                 tweets = []
