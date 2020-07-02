@@ -69,18 +69,18 @@ class Hydrate(RateControl):
                 for json_str in json_split(line):
                     try:
                         tweet = json.loads(json_str)
-                    except:
-                        print(line)
-                        print(json_str)
-                        json.loads(json_str)
-                if tweet['truncated']:
-                    ids.append(tweet['id_str'])
-                else:
-                    tweets.append(tweet)
-                if len(ids) >= 100:
-                    self._hydrate_and_write(ids, tweets)
-                    ids = []
-                    tweets = []
+                        if tweet['truncated']:
+                            ids.append(tweet['id_str'])
+                        else:
+                            tweets.append(tweet)
+                            if len(ids) >= 100:
+                                self._hydrate_and_write(ids, tweets)
+                                ids = []
+                                tweets = []
+                    except json.decoder.JSONDecodeError as e:
+                        print('ERROR: {}'.format(e))
+                        with open(self.errfile, 'a') as file:
+                            file.write('ERROR: {}\n'.format(e))
         self._hydrate_and_write(ids, tweets)
 
 
