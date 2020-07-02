@@ -33,6 +33,8 @@ class Hydrate(RateControl):
         self.outfile = outfile
         self.errfile = errfile
         self.twitter = twython_from_key_and_auth(key_file, auth_file)
+        self.retrieved = 0
+        self.lost = 0
 
     def get_tweets(self, tweet_ids):
         ids = ','.join(tweet_ids)
@@ -54,8 +56,10 @@ class Hydrate(RateControl):
             tweets = self.get_tweets(truncated_ids)
         else:
             tweets = []
+        self.retrieved += len(tweets)
+        self.lost += len(truncated_ids) - len(tweets)
         print('{} tweets retrieved, {} tweets lost.'.format(
-            len(tweets), len(truncated_ids) - len(tweets)))
+            self.retrieved, self.lost))
         tweets += non_truncated_tweets
         tweets = sorted(tweets, key=lambda k: k['id'])
         with gzip.open(self.outfile, 'at') as f:
@@ -67,21 +71,29 @@ class Hydrate(RateControl):
         tweets = []
         with gzip.open(self.infile, 'rt') as f:
             for line in f.readlines():
-                for json_str in json_split(line):
-                    try:
-                        tweet = json.loads(json_str)
-                        if tweet['truncated']:
-                            ids.append(tweet['id_str'])
-                        else:
-                            tweets.append(tweet)
-                    except Exception as e:
-                        print('ERROR: {}'.format(e))
-                        with open(self.errfile, 'a') as file:
-                            file.write('ERROR: {}\n'.format(e))
+                try:
+                    tid = int(line.strip())
+                    ids.append(str(tid))
                     if len(ids) >= 100:
                         self._hydrate_and_write(ids, tweets)
                         ids = []
                         tweets = []
+                except ValueError:
+                    for json_str in json_split(line):
+                        try:
+                            tweet = json.loads(json_str)
+                            if tweet['truncated']:
+                                ids.append(tweet['id_str'])
+                            else:
+                                tweets.append(tweet)
+                        except Exception as e:
+                            print('ERROR: {}'.format(e))
+                            with open(self.errfile, 'a') as file:
+                                file.write('ERROR: {}\n'.format(e))
+                        if len(ids) >= 100:
+                            self._hydrate_and_write(ids, tweets)
+                            ids = []
+                            tweets = []
         self._hydrate_and_write(ids, tweets)
 
 
