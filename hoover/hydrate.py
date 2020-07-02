@@ -42,8 +42,7 @@ class Hydrate(RateControl):
                                                 tweet_mode='extended')
             return tweets
         except TwythonError as e:
-            print(tweet_ids)
-            print('*** {}'.len(tweet_ids))
+            print('*** {}'.format(len(tweet_ids)))
             print('ERROR: {}'.format(e))
             with open(self.errfile, 'a') as file:
                 file.write('ERROR: {}\n'.format(e))
