@@ -6,7 +6,7 @@ from hoover.hydrate import hydrate_file
 
 
 def new_file_name(file_name):
-    '{}-hydrated.json.gz'.format(file_name.split('.')[0])
+    return '{}-hydrated.json.gz'.format(file_name.split('.')[0])
 
 
 class HydrateTimelines(object):
