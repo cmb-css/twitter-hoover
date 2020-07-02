@@ -46,7 +46,7 @@ class Hydrate(RateControl):
         with gzip.open(self.infile, 'rt') as f:
             for line in f.readlines():
                 try:
-                    tweet = json.loads(line)
+                    tweet = json.loads(line.strip())
                 except:
                     print(line)
                     tweet = json.loads(line)
