@@ -45,7 +45,7 @@ class Hydrate(RateControl):
             print('ERROR: {}'.format(e))
             with open(self.errfile, 'a') as file:
                 file.write('ERROR: {}\n'.format(e))
-            return None
+            return []
 
     def _hydrate_and_write(self, truncated_ids, non_truncated_tweets):
         if len(truncated_ids) > 0:
@@ -81,7 +81,6 @@ class Hydrate(RateControl):
                         print('ERROR: {}'.format(e))
                         with open(self.errfile, 'a') as file:
                             file.write('ERROR: {}\n'.format(e))
-                        return []
         self._hydrate_and_write(ids, tweets)
 
 
