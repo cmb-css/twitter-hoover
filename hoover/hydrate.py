@@ -74,7 +74,7 @@ class Hydrate(RateControl):
                             ids.append(tweet['id_str'])
                         else:
                             tweets.append(tweet)
-                    except json.decoder.JSONDecodeError as e:
+                    except Exception as e:
                         print('ERROR: {}'.format(e))
                         with open(self.errfile, 'a') as file:
                             file.write('ERROR: {}\n'.format(e))
