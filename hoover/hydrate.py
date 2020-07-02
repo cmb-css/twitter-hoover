@@ -8,6 +8,24 @@ from hoover.auth import twython_from_key_and_auth
 from hoover.rate_control import RateControl
 
 
+def json_split(json_str):
+    if len(json_str.split('}{')) == 1:
+        return [json_str.strip()]
+    parts = []
+    depth = 0
+    part = ''
+    for i, c in enumerate(json_str.strip()):
+        part += c
+        if c == '{':
+            depth += 1
+        elif c == '}':
+            depth -= 1
+        if depth == 0:
+            parts.append(part)
+            part = ''
+    return parts
+
+
 class Hydrate(RateControl):
     def __init__(self, infile, outfile, errfile, key_file, auth_file):
         super().__init__(rate_limit=900)
@@ -45,11 +63,8 @@ class Hydrate(RateControl):
         tweets = []
         with gzip.open(self.infile, 'rt') as f:
             for line in f.readlines():
-                try:
+                for json_str in json_split(line):
                     tweet = json.loads(line.strip())
-                except:
-                    print(line)
-                    tweet = json.loads(line)
                 if tweet['truncated']:
                     ids.append(tweet['id_str'])
                 else:
