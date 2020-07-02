@@ -20,6 +20,8 @@ class HydrateTimelines(object):
     def _user_files(self, user_id):
         file_names = glob.glob(
             os.path.join(self._user_path(user_id), '*.json.gz'))
+        # temporary hack
+        file_names = [f for f in file_names if '-07' not in f]
         return file_names
 
     def hydrate(self):
