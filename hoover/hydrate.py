@@ -70,6 +70,7 @@ class Hydrate(RateControl):
                     try:
                         tweet = json.loads(json_str)
                     except:
+                        print(line)
                         print(json_str)
                         json.loads(json_str)
                 if tweet['truncated']:
