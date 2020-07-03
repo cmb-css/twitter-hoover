@@ -65,12 +65,14 @@ class Timelines(RateControl):
         max_date_month = 0
         latest_file = None
         for file_name in file_names:
-            base = os.path.basename(file_name)
-            base = base.split('.')[0]
-            date_month = int(base.replace('-', ''))
-            if date_month > max_date_month:
-                max_date_month = date_month
-                latest_file = file_name
+            # TODO: hack
+            if 'hydrated' not in file_name:
+                base = os.path.basename(file_name)
+                base = base.split('.')[0]
+                date_month = int(base.replace('-', ''))
+                if date_month > max_date_month:
+                    max_date_month = date_month
+                    latest_file = file_name
         print('latest_file: {}'.format(latest_file))
         return latest_file
 
