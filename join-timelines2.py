@@ -20,9 +20,7 @@ if __name__ == '__main__':
                 try:
                     with gzip.open(file_name, 'rt') as f:
                         for line in f.readlines():
-                            lline = line.lower()
-                            if ('"lang": "de"' in lline and
-                                    ('corona' in lline or 'covid' in lline)):
+                            if '"lang": "de"' in line:
                                 output_file.write(line)
                 except FileNotFoundError:
                     pass
