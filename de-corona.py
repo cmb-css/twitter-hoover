@@ -22,7 +22,7 @@ if __name__ == '__main__':
                         for line in f.readlines():
                             lline = line.lower()
                             if ('"lang": "de"' in lline and
-                                ('corona' in lline or 'covid' in lline)):
+                                    ('corona' in lline or 'covid' in lline)):
                                 output_file.write(line)
             except FileNotFoundError:
                 pass
