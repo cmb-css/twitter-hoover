@@ -11,7 +11,7 @@ if __name__ == '__main__':
     dir_names = glob.glob('timelines/*')
     n = len(dir_names)
 
-    with gzip.open('corona-de.json.gz', 'wt') as output_file:
+    with gzip.open('201911-202007-de.gz', 'wt') as output_file:
         for i, dir_name in enumerate(dir_names):
             print('[{}/{}] {}'.format(i, n, dir_name))
             user_id = os.path.basename(dir_name)
