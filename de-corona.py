@@ -24,6 +24,6 @@ if __name__ == '__main__':
                             if ('"lang": "de"' in lline and
                                     ('corona' in lline or 'covid' in lline)):
                                 output_file.write(line)
-            except FileNotFoundError:
-                pass
+                except FileNotFoundError:
+                    pass
     print('done.')
