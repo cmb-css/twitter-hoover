@@ -74,7 +74,7 @@ class Hydrate(RateControl):
                 try:
                     tid = int(line.strip())
                     ids.append(str(tid))
-                    if len(ids) >= 100 or len(tweets) >= 100000:
+                    if len(ids) >= 100:
                         self._hydrate_and_write(ids, tweets)
                         ids = []
                         tweets = []
@@ -86,6 +86,7 @@ class Hydrate(RateControl):
                                 ids.append(tweet['id_str'])
                             else:
                                 tweets.append(tweet)
+                            print('{} {}'.format(len(ids), len(tweets)))
                         except Exception as e:
                             print('ERROR: {}'.format(e))
                             with open(self.errfile, 'a') as file:
