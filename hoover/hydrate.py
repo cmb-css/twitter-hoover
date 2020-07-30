@@ -69,11 +69,8 @@ class Hydrate(RateControl):
     def retrieve(self):
         ids = []
         tweets = []
-        print('#1')
         with gzip.open(self.infile, 'rt') as f:
-            print('#2')
-            for line in f.readlines():
-                print('#3')
+            for line in f:
                 try:
                     tid = int(line.strip())
                     ids.append(str(tid))
@@ -83,16 +80,12 @@ class Hydrate(RateControl):
                         tweets = []
                 except ValueError:
                     for json_str in json_split(line):
-                        print('#4')
                         try:
                             tweet = json.loads(json_str)
                             if tweet['truncated']:
-                                print('#5')
                                 ids.append(tweet['id_str'])
                             else:
-                                print('#6')
                                 tweets.append(tweet)
-                            print('{} {}'.format(len(ids), len(tweets)))
                         except Exception as e:
                             print('ERROR: {}'.format(e))
                             with open(self.errfile, 'a') as file:
