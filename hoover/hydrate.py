@@ -90,7 +90,7 @@ class Hydrate(RateControl):
                             print('ERROR: {}'.format(e))
                             with open(self.errfile, 'a') as file:
                                 file.write('ERROR: {}\n'.format(e))
-                        if len(ids) >= 100 or len(tweets) >= 100000:
+                        if len(ids) >= 100 or len(tweets) >= 1000:
                             self._hydrate_and_write(ids, tweets)
                             ids = []
                             tweets = []
