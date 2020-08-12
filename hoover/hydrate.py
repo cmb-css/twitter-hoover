@@ -1,6 +1,3 @@
-import sys
-import os
-import glob
 import json
 import gzip
 from twython import TwythonError

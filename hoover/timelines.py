@@ -1,4 +1,3 @@
-import sys
 import os
 import glob
 import json
@@ -6,7 +5,7 @@ import gzip
 from collections import defaultdict
 from twython import TwythonError
 from hoover.auth import twython_from_key_and_auth
-from hoover.snowflake import *
+from hoover.snowflake import utc2snowflake, str2utc, utcnow
 from hoover.rate_control import RateControl
 from hoover.users import Users, get_user_ids
 from datetime import datetime
