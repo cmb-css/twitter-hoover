@@ -65,6 +65,14 @@ class Users(RateControl):
                     response = self.twitter.get_followers_list(user_id=user_id,
                                                                cursor=cursor,
                                                                count=200)
+                elif entity_type == 'friends':
+                    response = self.twitter.get_friends_ids(user_id=user_id,
+                                                            cursor=cursor,
+                                                            count=5000)
+                elif entity_type == 'followers':
+                    response = self.twitter.get_followers_ids(user_id=user_id,
+                                                              cursor=cursor,
+                                                              count=5000)
                 else:
                     raise RuntimeError(
                         'Unknown entity type: "{}".'.format(entity_type))
@@ -115,3 +123,12 @@ def retrieve_friends(key_file, auth_file, user, outfile, infile, outdir):
 
 def retrieve_followers(key_file, auth_file, user, outfile, infile, outdir):
     retrieve('followers', key_file, auth_file, user, outfile, infile, outdir)
+
+
+def retrieve_friend_ids(key_file, auth_file, user, outfile, infile, outdir):
+    retrieve('friend_ids', key_file, auth_file, user, outfile, infile, outdir)
+
+
+def retrieve_follower_ids(key_file, auth_file, user, outfile, infile, outdir):
+    retrieve(
+        'follower_ids', key_file, auth_file, user, outfile, infile, outdir)
