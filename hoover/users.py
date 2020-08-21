@@ -65,14 +65,6 @@ class Users(RateControl):
                     response = self.twitter.get_followers_list(user_id=user_id,
                                                                cursor=cursor,
                                                                count=200)
-                elif entity_type == 'friend_ids':
-                    response = self.twitter.get_friends_ids(user_id=user_id,
-                                                            cursor=cursor,
-                                                            count=5000)
-                elif entity_type == 'follower_ids':
-                    response = self.twitter.get_followers_ids(user_id=user_id,
-                                                              cursor=cursor,
-                                                              count=5000)
                 else:
                     raise RuntimeError(
                         'Unknown entity type: "{}".'.format(entity_type))
@@ -86,6 +78,35 @@ class Users(RateControl):
                     user['created_ts'] = str2utc(user['created_at'])
                     csvwriter.writerow([user[field] for field in USER_FIELDS])
             print('{} {} found.'.format(len(users), entity_type))
+        except TwythonError as e:
+            print('ERROR: {}'.format(e))
+
+    def retrieve_ids(self, user, entity_type, outfile):
+        try:
+            user_id = self.user2id(user)
+            user_ids = []
+            cursor = -1
+            while cursor != 0:
+                self.pre_request(verbose=True)
+                if entity_type == 'friends_ids':
+                    response = self.twitter.get_friends_ids(user_id=user_id,
+                                                            cursor=cursor,
+                                                            count=5000)
+                elif entity_type == 'followers_ids':
+                    response = self.twitter.get_followers_ids(user_id=user_id,
+                                                              cursor=cursor,
+                                                              count=5000)
+                else:
+                    raise RuntimeError(
+                        'Unknown entity type: "{}".'.format(entity_type))
+                cursor = response['next_cursor']
+                user_ids += response['ids']
+
+            with open(outfile, 'w') as outfile:
+                csvwriter = csv.writer(outfile)
+                for user_id in user_ids:
+                    csvwriter.writerow([user_id])
+            print('{} {} found.'.format(len(user_ids), entity_type))
         except TwythonError as e:
             print('ERROR: {}'.format(e))
 
@@ -111,7 +132,10 @@ def retrieve(entity_type, key_file, auth_file,
             print('Retrieving {} for user {}.'.format(entity_type, user_id))
             outfile = '{}-{}.csv'.format(user_id, entity_type)
             outfile = os.path.join(outdir, outfile)
-            users.retrieve(user_id, entity_type, outfile)
+            if 'ids' in entity_type:
+                users.retrieve_ids(user_id, entity_type, outfile)
+            else:
+                users.retrieve(user_id, entity_type, outfile)
     else:
         raise RuntimeError(
             'Either --user or --infile must be provided.')
@@ -125,10 +149,10 @@ def retrieve_followers(key_file, auth_file, user, outfile, infile, outdir):
     retrieve('followers', key_file, auth_file, user, outfile, infile, outdir)
 
 
-def retrieve_friend_ids(key_file, auth_file, user, outfile, infile, outdir):
-    retrieve('friend_ids', key_file, auth_file, user, outfile, infile, outdir)
+def retrieve_friends_ids(key_file, auth_file, user, outfile, infile, outdir):
+    retrieve('friends_ids', key_file, auth_file, user, outfile, infile, outdir)
 
 
-def retrieve_follower_ids(key_file, auth_file, user, outfile, infile, outdir):
+def retrieve_followers_ids(key_file, auth_file, user, outfile, infile, outdir):
     retrieve(
-        'follower_ids', key_file, auth_file, user, outfile, infile, outdir)
+        'followers_ids', key_file, auth_file, user, outfile, infile, outdir)

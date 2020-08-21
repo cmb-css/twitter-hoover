@@ -5,7 +5,7 @@ from hoover.auth import auth_app
 from hoover.stream import read_stream
 from hoover.timelines import retrieve_timelines
 from hoover.users import (retrieve_friends, retrieve_followers,
-                          retrieve_friend_ids, retrieve_follower_ids)
+                          retrieve_friends_ids, retrieve_followers_ids)
 from hoover.simple import simplify
 from hoover.csv import to_csv
 from hoover.youtube import extract_videos
@@ -76,12 +76,12 @@ def cli():
     elif args.command == 'followers':
         retrieve_followers(args.key, args.auth, args.user, args.outfile,
                            args.infile, args.outdir)
-    elif args.command == 'friend_ids':
-        retrieve_friend_ids(args.key, args.auth, args.user, args.outfile,
-                            args.infile, args.outdir)
-    elif args.command == 'follower_ids':
-        retrieve_follower_ids(args.key, args.auth, args.user, args.outfile,
-                              args.infile, args.outdir)
+    elif args.command == 'friends_ids':
+        retrieve_friends_ids(args.key, args.auth, args.user, args.outfile,
+                             args.infile, args.outdir)
+    elif args.command == 'followers_ids':
+        retrieve_followers_ids(args.key, args.auth, args.user, args.outfile,
+                               args.infile, args.outdir)
     elif args.command == 'simplify':
         simplify(args.infile)
     elif args.command == 'csv':
