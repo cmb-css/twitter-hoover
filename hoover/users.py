@@ -65,11 +65,11 @@ class Users(RateControl):
                     response = self.twitter.get_followers_list(user_id=user_id,
                                                                cursor=cursor,
                                                                count=200)
-                elif entity_type == 'friends':
+                elif entity_type == 'friend_ids':
                     response = self.twitter.get_friends_ids(user_id=user_id,
                                                             cursor=cursor,
                                                             count=5000)
-                elif entity_type == 'followers':
+                elif entity_type == 'follower_ids':
                     response = self.twitter.get_followers_ids(user_id=user_id,
                                                               cursor=cursor,
                                                               count=5000)
