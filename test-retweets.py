@@ -30,7 +30,7 @@ class TestRetweets(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         tweet = json.loads(line)
-                        self.total_tweets
+                        self.total_tweets += 1
                         if 'retweeted_status' in tweet:
                             self.total_retweets += 1
                 print('# tweets: {}; # retweets: {}'.format(
