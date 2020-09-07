@@ -1,8 +1,8 @@
 import os
-import glob
+# import glob
 import gzip
+import json
 from hoover.users import get_user_ids
-from hoover.hydrate import hydrate_file
 
 
 class TestRetweets(object):
@@ -17,25 +17,20 @@ class TestRetweets(object):
         # file_names = glob.glob(
         #     os.path.join(self._user_path(user_id), '*.json.gz'))
         # return file_names
-        return ['2020-07.json.gz']
+        return [os.path.join(self._user_path(user_id), '2020-07.json.gz')]
 
     def run(self):
         for i, user_id in enumerate(self.user_ids):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
             for infile in self._user_files(user_id):
-                # TODO: temporary hack
-                if '-07.json.gz' not in infile:
-                    outfile = new_file_name(infile)
-                    try:
-                        os.remove(outfile)
-                    except OSError:
-                        pass
-                    print('infile: {}\noutfile: {}'.format(infile, outfile))
-                    hydrate_file('key-and-secret.txt', 'auth.txt',
-                                 infile, outfile, 'error.log')
+                print('infile: {}'.format(infile))
+                with gzip.open(infile, 'rt') as f:
+                    for line in f:
+                        tweet = json.loads(line)
+                        print(tweet['in_reply_to_user_id'])
 
 
 if __name__ == '__main__':
-    htl = TestRetweets('eu-elections-userids.csv', 'timelines')
-    htl.run()
+    tr = TestRetweets('eu-elections-userids.csv', 'timelines')
+    tr.run()
