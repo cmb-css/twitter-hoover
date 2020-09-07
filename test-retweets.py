@@ -39,6 +39,8 @@ class TestRetweets(object):
                                 self.inretweets += 1
                 print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
                     self.tweets, self.retweets, self.inretweets))
+                print('inretweet ratio: '.format(
+                    float(self.inretweets) / float(self.retweets)))
 
 
 if __name__ == '__main__':
