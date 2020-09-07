@@ -9,8 +9,9 @@ class TestRetweets(object):
     def __init__(self, infile, indir):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
-        self.total_tweets = 0
-        self.total_retweets = 0
+        self.tweets = 0
+        self.retweets = 0
+        self.inretweets = 0
 
     def _user_path(self, user_id):
         return os.path.join(self.indir, str(user_id))
@@ -30,11 +31,14 @@ class TestRetweets(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         tweet = json.loads(line)
-                        self.total_tweets += 1
+                        self.tweets += 1
                         if 'retweeted_status' in tweet:
-                            self.total_retweets += 1
-                print('# tweets: {}; # retweets: {}'.format(
-                    self.total_tweets, self.total_retweets))
+                            self.retweets += 1
+                            ruid = tweet['retweeted_status']['user']['id']
+                            if ruid in self.user_ids:
+                                self.inretweets += 1
+                print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
+                    self.tweets, self.retweets, self.inside_retweets))
 
 
 if __name__ == '__main__':
