@@ -30,12 +30,15 @@ class HydrateTimelines(object):
 
     def hydrate(self):
         for i, user_id in enumerate(self.user_ids):
+            if i > 35:
+                break
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
             self._remove_hydrated(user_id)
             for infile in self._user_files(user_id):
                 # TODO: temporary hack
-                if '2020-07.json.gz' in infile:
+                # if '2020-07.json.gz' in infile:
+                if True:
                     outfile = new_file_name(infile)
                     try:
                         os.remove(outfile)
