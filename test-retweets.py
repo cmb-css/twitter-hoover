@@ -1,5 +1,5 @@
 import os
-# import glob
+import glob
 import gzip
 import json
 from hoover.users import get_user_ids
@@ -14,10 +14,10 @@ class TestRetweets(object):
         return os.path.join(self.indir, str(user_id))
 
     def _user_files(self, user_id):
-        # file_names = glob.glob(
-        #     os.path.join(self._user_path(user_id), '*.json.gz'))
-        # return file_names
-        return [os.path.join(self._user_path(user_id), '2020-07.json.gz')]
+        # TEMPORARY HACK!!! (DATE)
+        file_names = glob.glob(
+            os.path.join(self._user_path(user_id), '2020-07.json.gz'))
+        return file_names
 
     def run(self):
         for i, user_id in enumerate(self.user_ids):
