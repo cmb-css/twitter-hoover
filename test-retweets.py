@@ -9,6 +9,8 @@ class TestRetweets(object):
     def __init__(self, infile, indir):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
+        self.total_tweets = 0
+        self.total_retweets = 0
 
     def _user_path(self, user_id):
         return os.path.join(self.indir, str(user_id))
@@ -28,7 +30,9 @@ class TestRetweets(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         tweet = json.loads(line)
-                        print(tweet['in_reply_to_user_id'])
+                        self.total_tweets
+                        if tweet['in_reply_to_user_id']:
+                            self.total_retweets += 1
 
 
 if __name__ == '__main__':
