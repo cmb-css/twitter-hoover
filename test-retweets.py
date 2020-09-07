@@ -38,7 +38,7 @@ class TestRetweets(object):
                             if ruid in self.user_ids:
                                 self.inretweets += 1
                 print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
-                    self.tweets, self.retweets, self.inside_retweets))
+                    self.tweets, self.retweets, self.inretweets))
 
 
 if __name__ == '__main__':
