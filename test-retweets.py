@@ -31,8 +31,10 @@ class TestRetweets(object):
                     for line in f:
                         tweet = json.loads(line)
                         self.total_tweets
-                        if tweet['in_reply_to_user_id']:
+                        if 'retweeted_status' in tweet:
                             self.total_retweets += 1
+                print('# tweets: {}; # retweets: {}'.format(
+                    self.total_tweets, self.total_retweets))
 
 
 if __name__ == '__main__':
