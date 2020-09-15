@@ -32,7 +32,7 @@ hashtags3 = {'#remaniement', '#Remaniement', '#RemaniementMinisteriel',
              '#Asselineau', '#Coronavirus', '#Italexit', '#reveillezvous'}
 
 
-hashtags = hashtags1 + hashtags2 + hashtags3
+hashtags = hashtags1 | hashtags2 | hashtags3
 
 
 def filter_by_hashtags(json_str):
