@@ -77,8 +77,8 @@ class ExtractRetweets(object):
     def _reassign_parents(self):
         for root in self.retweets:
             parent = root
-            while parent in self.parent:
-                parent = self.parent[parent]
+            while parent in self.parents:
+                parent = self.parents[parent]
             if parent != root:
                 self.retweets[parent] += self.retweets[root]
                 self.retweets[root] = []
