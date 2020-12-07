@@ -120,5 +120,5 @@ class ExtractRetweets(object):
 
 if __name__ == '__main__':
     tr = ExtractRetweets(
-        'eu-elections-userids.csv', 'timelines', 'retweets.json')
+        'retweet-userids.csv', 'timelines', 'retweets.json')
     tr.run()
