@@ -45,9 +45,9 @@ def filter_by_hashtags(json_str):
 
 def simple(tweet):
     return {
-        'id': tweet['id_str']
-        'text': tweet['full_text']
-        'created_at': tweet['created_at']
+        'id': tweet['id_str'],
+        'text': tweet['full_text'],
+        'created_at': tweet['created_at'],
         'user': tweet['user']['screen_name']}
 
 
