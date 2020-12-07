@@ -61,8 +61,9 @@ class ExtractRetweets(object):
         self.n_retweets = 0
         self.n_inretweets = 0
 
+        self.tweets = {}
         self.retweets = defaultdict(list)
-        self.parent = {}
+        self.parents = {}
 
     def _user_path(self, user_id):
         return os.path.join(self.indir, str(user_id))
@@ -102,7 +103,8 @@ class ExtractRetweets(object):
                                 parent = tweet['retweeted_status']
                                 parent_id = parent['id_str']
                                 self.retweets[parent_id].append(simple(tweet))
-                                self.parent[tweet['id_str']] = simple(parent)
+                                self.tweets[parent_id] = simple(parent)
+                                self.parents[tweet['id_str']] = parent_id
 
                 print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
                     self.n_tweets, self.n_retweets, self.n_inretweets))
@@ -112,10 +114,11 @@ class ExtractRetweets(object):
         self._reassign_parents()
 
         with open(self.outfile, 'wt') as f:
-            for root in self.retweets:
-                if len(self.retweets[root]) > 0:
-                    root['retweets'] = self.retweets[root]
-                    f.write('{}\n'.format(json.dumps(root)))
+            for tid in self.tweets:
+                if len(self.retweets[tid]) > 0:
+                    tweet = self.tweets[tid]
+                    tweet['retweets'] = self.retweets[tid]
+                    f.write('{}\n'.format(json.dumps(tweet)))
 
 
 if __name__ == '__main__':
