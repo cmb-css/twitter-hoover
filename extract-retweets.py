@@ -48,7 +48,7 @@ def simple(tweet):
         'id': tweet['id_str'],
         'text': tweet['full_text'],
         'created_at': tweet['created_at'],
-        'user': tweet['user']['screen_name']
+        'user': tweet['user']['screen_name'],
         'followers_count': data['user']['followers_count'],
         'friends_count': data['user']['friends_count']}
 
