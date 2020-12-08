@@ -116,8 +116,8 @@ class ExtractRetweets(object):
 
                 print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
                     self.n_tweets, self.n_retweets, self.n_inretweets))
-                print('inretweet ratio: {}'.format(
-                    float(self.n_inretweets) / float(self.n_retweets)))
+                # print('inretweet ratio: {}'.format(
+                #     float(self.n_inretweets) / float(self.n_retweets)))
 
         self._reassign_parents()
 
