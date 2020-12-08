@@ -48,7 +48,9 @@ def simple(tweet):
         'id': tweet['id_str'],
         'text': tweet['full_text'],
         'created_at': tweet['created_at'],
-        'user': tweet['user']['screen_name']}
+        'user': tweet['user']['screen_name']
+        'followers_count': data['user']['followers_count'],
+        'friends_count': data['user']['friends_count']}
 
 
 class ExtractRetweets(object):
@@ -60,10 +62,12 @@ class ExtractRetweets(object):
         self.n_tweets = 0
         self.n_retweets = 0
         self.n_inretweets = 0
+        self.n_quotes = 0
+        self.n_inquotes = 0
 
         self.tweets = {}
         self.retweets = defaultdict(list)
-        self.parents = {}
+        self.quotes = defaultdict(list)
 
     def _user_path(self, user_id):
         return os.path.join(self.indir, str(user_id))
@@ -73,15 +77,6 @@ class ExtractRetweets(object):
         file_names = glob.glob(
             os.path.join(self._user_path(user_id), '2020-07.json.gz'))
         return file_names
-
-    def _reassign_parents(self):
-        for root in self.retweets:
-            parent = root
-            while parent in self.parents:
-                parent = self.parents[parent]
-            if parent != root:
-                self.retweets[parent] += self.retweets[root]
-                self.retweets[root] = []
 
     def run(self):
         for i, user_id in enumerate(self.user_ids):
@@ -94,38 +89,42 @@ class ExtractRetweets(object):
                         if filter_by_hashtags(line):
                             tweet = json.loads(line)
                             self.n_tweets += 1
-                            if 'quoted_status' in tweet:
+                            if 'retweeted_status' in tweet:
                                 self.n_retweets += 1
-                                ruid = tweet['quoted_status']['user']['id']
+                                ruser = tweet['retweeted_status']['user']
+                                ruid = ruser['id']
                                 if ruid in self.user_ids:
                                     self.n_inretweets += 1
-
+                                usr = ruser['scree_name']
+                                parent = tweet['retweeted_status']
+                                parent_id = parent['id_str']
+                                self.retweets[parent_id].append(usr)
+                                self.tweets[parent_id] = simple(parent)
+                            elif 'quoted_status' in tweet:
+                                self.n_quotes += 1
+                                ruid = tweet['quoted_status']['user']['id']
+                                if ruid in self.user_ids:
+                                    self.n_inquotes += 1
                                 parent = tweet['quoted_status']
                                 parent_id = parent['id_str']
-                                self.retweets[parent_id].append(simple(tweet))
+                                self.quotes[parent_id].append(simple(tweet))
                                 self.tweets[parent_id] = simple(parent)
-                                self.parents[tweet['id_str']] = parent_id
-                                print()
-                                print()
-                                print('PARENT')
-                                print(parent['full_text'])
-                                print('RETWEET')
-                                print(tweet['full_text'])
-                                print()
-                                print()
 
-                print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
-                    self.n_tweets, self.n_retweets, self.n_inretweets))
-                # print('inretweet ratio: {}'.format(
-                #     float(self.n_inretweets) / float(self.n_retweets)))
-
-        self._reassign_parents()
+                fileds = ['tweets',
+                          'retweets', 'inretweets',
+                          'quotes', 'inquotes']
+                field_strs = ['# {}: {{}}'.format(filed) for field in fields]
+                info_str = '; '.join(field_strs)
+                print(info_str.format(self.n_tweets,
+                                      self.n_retweets, self.n_inretweets,
+                                      self.n_quotes, self.n_inquotes))
 
         with open(self.outfile, 'wt') as f:
-            for tid in self.tweets:
-                if len(self.retweets[tid]) > 0:
+            for tid in self.quotes:
+                if len(self.quotes[tid]) > 0:
                     tweet = self.tweets[tid]
                     tweet['retweets'] = self.retweets[tid]
+                    tweet['quotes'] = self.quotes[tid]
                     f.write('{}\n'.format(json.dumps(tweet)))
 
 
