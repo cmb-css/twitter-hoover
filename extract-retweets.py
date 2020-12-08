@@ -110,10 +110,10 @@ class ExtractRetweets(object):
                                 self.quotes[parent_id].append(simple(tweet))
                                 self.tweets[parent_id] = simple(parent)
 
-                fileds = ['tweets',
+                fields = ['tweets',
                           'retweets', 'inretweets',
                           'quotes', 'inquotes']
-                field_strs = ['# {}: {{}}'.format(filed) for field in fields]
+                field_strs = ['# {}: {{}}'.format(field) for field in fields]
                 info_str = '; '.join(field_strs)
                 print(info_str.format(self.n_tweets,
                                       self.n_retweets, self.n_inretweets,
