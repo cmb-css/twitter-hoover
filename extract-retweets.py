@@ -94,13 +94,13 @@ class ExtractRetweets(object):
                         if filter_by_hashtags(line):
                             tweet = json.loads(line)
                             self.n_tweets += 1
-                            if 'retweeted_status' in tweet:
+                            if 'quoted_status' in tweet:
                                 self.n_retweets += 1
-                                ruid = tweet['retweeted_status']['user']['id']
+                                ruid = tweet['quoted_status']['user']['id']
                                 if ruid in self.user_ids:
                                     self.n_inretweets += 1
 
-                                parent = tweet['retweeted_status']
+                                parent = tweet['quoted_status']
                                 parent_id = parent['id_str']
                                 self.retweets[parent_id].append(simple(tweet))
                                 self.tweets[parent_id] = simple(parent)
