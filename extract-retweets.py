@@ -105,8 +105,13 @@ class ExtractRetweets(object):
                                 self.retweets[parent_id].append(simple(tweet))
                                 self.tweets[parent_id] = simple(parent)
                                 self.parents[tweet['id_str']] = parent_id
+                                print()
+                                print()
+                                print('PARENT')
                                 print(parent['full_text'])
+                                print('RETWEET')
                                 print(tweet['full_text'])
+                                print()
                                 print()
 
                 print('# tweets: {}; # retweets: {}; # inretweets: {}'.format(
