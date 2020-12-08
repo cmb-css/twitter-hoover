@@ -95,7 +95,7 @@ class ExtractRetweets(object):
                                 ruid = ruser['id']
                                 if ruid in self.user_ids:
                                     self.n_inretweets += 1
-                                usr = ruser['scree_name']
+                                usr = ruser['screen_name']
                                 parent = tweet['retweeted_status']
                                 parent_id = parent['id_str']
                                 self.retweets[parent_id].append(usr)
