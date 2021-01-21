@@ -25,7 +25,7 @@ def filter_by_hashtags(json_str):
 def simple(tweet):
     return {
         'id': tweet['id_str'],
-        'text': tweet['full_text'],
+        'text': tweet['full_text'] if 'full_text' in tweet else tweet['text'],
         'created_at': tweet['created_at'],
         'user': tweet['user']['screen_name'],
         'followers_count': tweet['user']['followers_count'],
