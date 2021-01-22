@@ -18,12 +18,8 @@ def extract_all_hashtags(tweet):
     hashtags = extract_hashtags(tweet)
     if 'retweeted_status' in tweet:
         hashtags += extract_hashtags(tweet['retweeted_status'])
-        print('XXXXXXXXXXXXXXXXXXXXXXXX')
-        print(hashtags)
     if 'quoted_status' in tweet:
         hashtags += extract_hashtags(tweet['quoted_status'])
-        print('YYYYYYYYYYYYYYYYYYYYYYYY')
-        print(hashtags)
     return set(hashtags)
 
 
