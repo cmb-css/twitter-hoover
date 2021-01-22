@@ -80,9 +80,9 @@ class ExtractUsers(object):
                                     self.users[uid]['tweets'] += 1
                                     self.n_tweets += 1
 
-                        print('tweets: {}; users: {}'.format(
-                            self.n_tweets, len(self.users)))
-                        print(self.hashtag_counts)
+            print('tweets: {}; users: {}'.format(
+                self.n_tweets, len(self.users)))
+            print(self.hashtag_counts)
 
         with open(self.outfile, 'wt') as f:
             for uid in self.users:
