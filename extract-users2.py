@@ -16,10 +16,10 @@ class ExtractUsers(object):
 
         self.users = {}
         self.n_tweets = 0
-        self.hastag_counts = {}
+        self.hashtag_counts = {}
 
         for ht in self.hashtags:
-            self.hashtag_counts[ht] + 0
+            self.hashtag_counts[ht] = 0
 
     def _filter_by_hashtags(self, json_str):
         for hashtag in self.hashtags:
