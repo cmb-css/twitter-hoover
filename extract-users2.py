@@ -7,6 +7,22 @@ import json
 from hoover.users import get_user_ids
 
 
+def extract_hashtags(tweet):
+    if 'entities' in tweet and 'hashtags' in tweet['entities']:
+        return list('#{}'.format(hashtag['text'].lower())
+                    for hashtag in tweet['entities']['hashtags'])
+    return []
+
+
+def extract_all_hashtags(tweet):
+    hashtags = extract_hashtags(tweet)
+    if 'retweeted_status' in tweet:
+        hashtags += extract_hashtags(tweet['retweeted_status'])
+    if 'quoted_status' in tweet:
+        hashtags += extract_hashtags(tweet['quoted_status'])
+    return hashtags
+
+
 class ExtractUsers(object):
     def __init__(self, infile, indir, outfile, hashtags):
         self.user_ids = get_user_ids(infile)
@@ -65,9 +81,7 @@ class ExtractUsers(object):
                             tweet = json.loads(line)
                             if ('entities' in tweet and
                                     'hashtags' in tweet['entities']):
-                                hashtags = ['#{}'.format(hashtag['text'].lower())
-                                            for hashtag
-                                            in tweet['entities']['hashtags']]
+                                hashtags = extract_all_hashtags(tweet)
                                 matches = False
                                 for ht1 in hashtags:
                                     for ht2 in self.hashtags:
