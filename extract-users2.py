@@ -82,7 +82,7 @@ class ExtractUsers(object):
 
                         print('tweets: {}; users: {}'.format(
                             self.n_tweets, len(self.users)))
-                        print(self.hastag_counts)
+                        print(self.hashtag_counts)
 
         with open(self.outfile, 'wt') as f:
             for uid in self.users:
