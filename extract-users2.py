@@ -96,7 +96,7 @@ if __name__ == '__main__':
     hashtags = ['#remaniement', '#RemaniementMinisteriel',
                 '#RemaniementDeLaHonte', '#RemaniementMinistériel']
 
-    hastags = list(hashtag.lower() for hashtag in hashtags)
+    hashtags = list(hashtag.lower() for hashtag in hashtags)
 
     tr = ExtractUsers(
         'retweet-userids.csv', 'timelines', 'users2.json', hashtags)
