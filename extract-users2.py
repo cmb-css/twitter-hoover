@@ -65,7 +65,7 @@ class ExtractUsers(object):
                             self.n_tweets += 1
                             if ('entities' in tweet and
                                     'hashtags' in tweet['entities']):
-                                hashtags = [hashtag['text']
+                                hashtags = ['#{}'.format(hashtag['text'])
                                             for hashtag
                                             in tweet['entities']['hashtags']]
                                 matches = False
