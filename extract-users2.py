@@ -66,15 +66,15 @@ class ExtractUsers(object):
                             self.n_tweets += 1
                             if ('entities' in tweet and
                                     'hashtags' in tweet['entities']):
-                                hashtags = ['#{}'.format(hashtag['text'])
+                                hashtags = ['#{}'.format(hashtag['text'].lower())
                                             for hashtag
                                             in tweet['entities']['hashtags']]
                                 matches = False
                                 for ht1 in hashtags:
                                     for ht2 in self.hashtags:
-                                        if ht1.lower() == ht2.lower():
+                                        if ht1 == ht2:
                                             self._count_hashtag(tweet['user'],
-                                                                ht2.lower())
+                                                                ht2)
                                             matches = True
                                 if matches:
                                     uid = tweet['user']['id']
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     hashtags = ['#remaniement', '#RemaniementMinisteriel',
                 '#RemaniementDeLaHonte', '#RemaniementMinistériel']
 
-    hastags = list(hastag.lower() for hastag in hashtags)
+    hastags = list(hashtag.lower() for hashtag in hashtags)
 
     tr = ExtractUsers(
         'retweet-userids.csv', 'timelines', 'users2.json', hashtags)
