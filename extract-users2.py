@@ -50,7 +50,7 @@ class ExtractUsers(object):
                 self.users[uid]['hashtags'][ht] = 0
 
         self.users[uid]['hashtags'][hashtag] += 1
-        self.hastag_counts[hashtag] += 1
+        self.hashtag_counts[hashtag] += 1
 
     def run(self):
         for i, user_id in enumerate(self.user_ids):
