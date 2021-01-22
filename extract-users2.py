@@ -23,7 +23,7 @@ class ExtractUsers(object):
 
     def _filter_by_hashtags(self, json_str):
         for hashtag in self.hashtags:
-            if hashtag in json_str.lower():
+            if hashtag.lower() in json_str.lower():
                 return True
         return False
 
@@ -95,8 +95,6 @@ class ExtractUsers(object):
 if __name__ == '__main__':
     hashtags = ['#remaniement', '#RemaniementMinisteriel',
                 '#RemaniementDeLaHonte', '#RemaniementMinistériel']
-
-    hastags = list(hastag.lower() for hastag in hashtags)
 
     tr = ExtractUsers(
         'retweet-userids.csv', 'timelines', 'users2.json', hashtags)
