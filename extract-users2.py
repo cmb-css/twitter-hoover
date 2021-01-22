@@ -43,7 +43,8 @@ class ExtractUsers(object):
         user = user['screen_name']
 
         if uid not in self.users:
-            self.users[uid] = {'screen_name': user,
+            self.users[uid] = {'id': uid,
+                               'screen_name': user,
                                'hashtags': {},
                                'tweets': 0}
             for ht in self.hashtags:
@@ -88,7 +89,6 @@ class ExtractUsers(object):
             for uid in self.users:
                 user = self.users[uid]
                 if len(user['tweets']) > 1:
-                    user['id'] = uid
                     f.write('{}\n'.format(json.dumps(user)))
 
 
