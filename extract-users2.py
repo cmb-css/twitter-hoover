@@ -63,7 +63,6 @@ class ExtractUsers(object):
                     for line in f:
                         if self._filter_by_hashtags(line):
                             tweet = json.loads(line)
-                            self.n_tweets += 1
                             if ('entities' in tweet and
                                     'hashtags' in tweet['entities']):
                                 hashtags = ['#{}'.format(hashtag['text'].lower())
