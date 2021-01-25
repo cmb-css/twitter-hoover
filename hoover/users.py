@@ -60,11 +60,11 @@ class Users(RateControl):
                 if entity_type == 'friends':
                     response = self.twitter.get_friends_list(user_id=user_id,
                                                              cursor=cursor,
-                                                             count=5000)
+                                                             count=200)
                 elif entity_type == 'followers':
                     response = self.twitter.get_followers_list(user_id=user_id,
                                                                cursor=cursor,
-                                                               count=5000)
+                                                               count=200)
                 else:
                     raise RuntimeError(
                         'Unknown entity type: "{}".'.format(entity_type))
