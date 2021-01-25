@@ -101,8 +101,7 @@ class ExtractUsers(object):
         with open(self.outfile, 'wt') as f:
             for uid in self.users:
                 user = self.users[uid]
-                if user['tweets'] > 1:
-                    f.write('{}\n'.format(json.dumps(user)))
+                f.write('{}\n'.format(json.dumps(user)))
 
 
 if __name__ == '__main__':
