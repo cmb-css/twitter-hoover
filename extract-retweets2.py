@@ -41,6 +41,7 @@ class ExtractRetweets(object):
             'text': text,
             'created_at': tweet['created_at'],
             'user': tweet['user']['screen_name'],
+            'user_id': tweet['user']['id'],
             'followers_count': tweet['user']['followers_count'],
             'friends_count': tweet['user']['friends_count'],
             'internal': internal}
@@ -82,14 +83,13 @@ class ExtractRetweets(object):
                             self.n_tweets += 1
                             if 'retweeted_status' in tweet:
                                 self.n_retweets += 1
-                                ruser = tweet['retweeted_status']['user']
-                                ruid = ruser['id']
+                                ruid = tweet['retweeted_status']['user']['id']
                                 if ruid in self.user_ids:
                                     self.n_inretweets += 1
-                                usr = tweet['user']['screen_name']
                                 parent = tweet['retweeted_status']
                                 parent_id = parent['id_str']
-                                self.retweets[parent_id].append(usr)
+                                self.retweets[parent_id].append(
+                                    self._simple(tweet))
                                 self.tweets[parent_id] = self._simple(parent)
                             elif 'quoted_status' in tweet:
                                 self.n_quotes += 1
