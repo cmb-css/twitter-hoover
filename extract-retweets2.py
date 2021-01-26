@@ -112,7 +112,7 @@ class ExtractRetweets(object):
                                       self.n_retweets, self.n_inretweets,
                                       self.n_quotes, self.n_inquotes))
 
-        with open(self.outfile, 'wt') as f:
+        with open(self.outfile, 'wt', encoding='utf-8') as f:
             for tid in self.quotes:
                 if len(self.quotes[tid]) > 0:
                     if self._urtweet_contains_hashtags(tid):
