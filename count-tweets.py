@@ -9,7 +9,7 @@ if __name__ == '__main__':
     count = 0
     for d in dirs:
         print('directory: {}'.format(d))
-        p = Path(d).glob('*.json.gz')
+        p = d.glob('*.json.gz')
         files = [x for x in p if x.is_file() and 'hydated' not in x]
         for file in files:
             print('file: {}'.format(file))
