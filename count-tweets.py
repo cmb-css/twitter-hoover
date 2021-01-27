@@ -10,7 +10,7 @@ if __name__ == '__main__':
     for d in dirs:
         print('directory: {}'.format(d))
         p = d.glob('*.json.gz')
-        files = [x for x in p if x.is_file() and 'hydated' not in str(x)]
+        files = [x for x in p if x.is_file() and 'hydrated' not in str(x)]
         for file in files:
             print('file: {}'.format(file))
             with gzip.open(file, 'rt') as f:
