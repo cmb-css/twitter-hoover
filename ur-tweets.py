@@ -6,7 +6,7 @@ from hoover.users import get_user_ids
 
 
 class ExtractUrtweets(object):
-    def __init__(self, infile, indir, outfile, hashtags):
+    def __init__(self, infile, indir, outfile):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
