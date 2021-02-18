@@ -10,6 +10,7 @@ class LangUsers(object):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
+        self.lang = lang
 
         self.n_users = 0
         self.lang_users = []
