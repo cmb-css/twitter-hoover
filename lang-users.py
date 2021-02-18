@@ -47,7 +47,7 @@ class LangUsers(object):
                             pass
 
             if user_tweets > 0:
-                percents = list((lang, count / user_tweets)
+                percents = list((lang, (count / user_tweets) * 100.0)
                                 for lang, count in lang_counter.most_common())
                 if percents[0][0] == self.lang and percents[0][1] >= 15.0:
                     self.lang_users.append(user_id)
