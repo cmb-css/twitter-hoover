@@ -40,6 +40,9 @@ class LangUsers(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         user_tweets += 1
+                        if user_tweets >= 1000:
+                            done = True
+                            break
                         try:
                             tweet = json.loads(line)
                             lang_counter[tweet['lang']] += 1
