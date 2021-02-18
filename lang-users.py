@@ -43,6 +43,8 @@ class LangUsers(object):
                         try:
                             tweet = json.loads(line)
                             lang_counter[tweet['lang']] += 1
+                        except json.decoder.JSONDecodeError:
+                            pass
 
             if user_tweets > 0:
                 percents = list((lang, count) / user_tweets 
