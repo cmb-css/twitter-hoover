@@ -40,8 +40,9 @@ class LangUsers(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         user_tweets += 1
-                        tweet = json.loads(line)
-                        lang_counter[tweet['lang']] += 1
+                        try:
+                            tweet = json.loads(line)
+                            lang_counter[tweet['lang']] += 1
 
             if user_tweets > 0:
                 percents = list((lang, count) / user_tweets 
