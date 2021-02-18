@@ -31,7 +31,7 @@ class LangUsers(object):
                 user_id, i, len(self.user_ids)))
             self.n_users += 1
             user_tweets = 0
-            lang_counter = Counter
+            lang_counter = Counter()
             done = False
             for infile in self._user_files(user_id):
                 if done:
