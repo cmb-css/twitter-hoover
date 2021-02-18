@@ -2,6 +2,7 @@ import os
 import glob
 import gzip
 import json
+from collections import Counter
 from hoover.users import get_user_ids
 
 
@@ -28,30 +29,27 @@ class LangUsers(object):
         for i, user_id in enumerate(self.user_ids):
             print('processing user {} #{}/{}...'.format(
                 user_id, i, len(self.user_ids)))
+            self.n_users += 1
             user_tweets = 0
-            lang_tweets = 0
+            lang_counter = Counter
             done = False
             for infile in self._user_files(user_id):
                 if done:
                     break
-                self.n_users += 1
                 print('infile: {}'.format(infile))
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         user_tweets += 1
                         tweet = json.loads(line)
-                        if tweet['lang'] == self.lang:
-                            lang_tweets += 1
-                        # number of language tweets to consider language user
-                        if lang_tweets >= 5:
-                            self.lang_users.append(user_id)
-                            done = True
-                            break
-                        # number of tweets until giving up
-                        if user_tweets >= 1000 and lang_tweets == 0:
-                            done = True
-                            break
+                        lang_counter[tweet['lang']] += 1
 
+            if user_tweets > 0:
+                percents = list(lang, count / user_tweets 
+                                for lang, count in lang_counter.most_common())
+                if list[0][0] == self.lang and list[0][1] >= 15.0:
+                    self.lang_users.append(user_id)
+            print(' | '.join(['{} {:.0f}%'.format(lang, percent)
+                  for lang, percent in percents]))
             print('users: {}; lang-users: {}'.format(
                 self.n_users, len(self.lang_users)))
 
