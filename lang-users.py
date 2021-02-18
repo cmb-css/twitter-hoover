@@ -48,8 +48,8 @@ class LangUsers(object):
                                 for lang, count in lang_counter.most_common())
                 if list[0][0] == self.lang and list[0][1] >= 15.0:
                     self.lang_users.append(user_id)
-            print(' | '.join(['{} {:.0f}%'.format(lang, percent)
-                  for lang, percent in percents]))
+                print(' | '.join(['{} {:.0f}%'.format(lang, percent)
+                      for lang, percent in percents]))
             print('users: {}; lang-users: {}'.format(
                 self.n_users, len(self.lang_users)))
 
