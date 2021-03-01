@@ -54,9 +54,8 @@ class ExtractRetweets(object):
     def _user_files(self, user_id):
         file_names = []
         for i in range(1, 13):
-            file_names.append(
-                glob.glob(os.path.join(
-                    self._user_path(user_id), '2020-{:02}.json.gz'.format(i))))
+            file_names += glob.glob(os.path.join(
+                self._user_path(user_id), '2020-{:02}.json.gz'.format(i)))
         return file_names
 
     def _urtweet(self, tid):
