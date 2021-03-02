@@ -74,26 +74,30 @@ class ExtractRetweets(object):
                 with gzip.open(infile, 'rt') as f:
                     for line in f:
                         if self._filter(line):
-                            tweet = json.loads(line)
-                            tid = tweet['id_str']
-                            if tid not in self.tids:
-                                self.tids.add(tid)
-                                new += 1
+                            try:
+                                tweet = json.loads(line)
+                                tid = tweet['id_str']
+                                if tid not in self.tids:
+                                    self.tids.add(tid)
+                                    new += 1
 
-                                self.n_tweets += 1
-                                if 'quoted_status' in tweet:
-                                    self.n_quotes += 1
-                                    qs = tweet['quoted_status']
-                                    quid = qs['user']['id']
-                                    if quid in self.user_ids:
-                                        self.n_inquotes += 1
-                                    parent = qs
-                                    parent_id = parent['id_str']
-                                    self.quotes[parent_id].append(
-                                        self._simple(tweet))
-                                    self.tweets[parent_id] = self._simple(
-                                        parent)
-                                    self.parent[tweet['id_str']] = parent_id
+                                    self.n_tweets += 1
+                                    if 'quoted_status' in tweet:
+                                        self.n_quotes += 1
+                                        qs = tweet['quoted_status']
+                                        quid = qs['user']['id']
+                                        if quid in self.user_ids:
+                                            self.n_inquotes += 1
+                                        parent = qs
+                                        parent_id = parent['id_str']
+                                        self.quotes[parent_id].append(
+                                            self._simple(tweet))
+                                        self.tweets[parent_id] = self._simple(
+                                            parent)
+                                        self.parent[tweet['id_str']] =\
+                                            parent_id
+                            except json.decoder.JSONDecodeError:
+                                pass
 
                     fields = ['n', 'tweets', 'quotes', 'inquotes']
                     field_strs = ['# {}: {{}}'.format(field)
