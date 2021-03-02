@@ -8,6 +8,25 @@ from collections import defaultdict
 from hoover.users import get_user_ids
 
 
+def _simple(tweet):
+    text = tweet['full_text'] if 'full_text' in tweet else tweet['text']
+    data = {
+        'id': tweet['id_str'],
+        'text': text,
+        'created_at': tweet['created_at'],
+        'user': tweet['user']['screen_name'],
+        'user_id': tweet['user']['id'],
+        'followers_count': tweet['user']['followers_count'],
+        'friends_count': tweet['user']['friends_count'],
+        'is_quote': tweet['is_quote_status'],
+        'urls': []}
+    if 'entities' in tweet:
+        if 'urls' in tweet['entities']:
+            for url_entity in tweet['entities']['urls']:
+                data['urls'].append(url_entity['expanded_url'])
+    return data
+
+
 class ExtractRetweets(object):
     def __init__(self, infile, indir, outfile):
         self.user_ids = get_user_ids(infile)
@@ -25,26 +44,6 @@ class ExtractRetweets(object):
 
     def _filter(self, json_str):
         return 'quoted_status' in json_str
-
-    def _simple(self, tweet):
-        uid = tweet['user']['id']
-        internal = uid in self.user_ids
-        text = tweet['full_text'] if 'full_text' in tweet else tweet['text']
-        data = {
-            'id': tweet['id_str'],
-            'text': text,
-            'created_at': tweet['created_at'],
-            'user': tweet['user']['screen_name'],
-            'user_id': tweet['user']['id'],
-            'followers_count': tweet['user']['followers_count'],
-            'friends_count': tweet['user']['friends_count'],
-            'internal': internal,
-            'urls': []}
-        if 'entities' in tweet:
-            if 'urls' in tweet['entities']:
-                for url_entity in tweet['entities']['urls']:
-                    data['urls'].append(url_entity['expanded_url'])
-        return data
 
     def _user_path(self, user_id):
         return os.path.join(self.indir, str(user_id))
@@ -86,9 +85,9 @@ class ExtractRetweets(object):
                                             parent = qs
                                             parent_id = parent['id_str']
                                             self.quotes[parent_id].append(
-                                                self._simple(tweet))
+                                                _simple(tweet))
                                             self.tweets[parent_id] =\
-                                                self._simple(parent)
+                                                _simple(parent)
                                             self.parent[tweet['id_str']] =\
                                                 parent_id
                             except json.decoder.JSONDecodeError:
