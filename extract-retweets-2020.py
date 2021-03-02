@@ -14,9 +14,7 @@ class ExtractRetweets(object):
         self.indir = indir
         self.outfile = outfile
 
-        self.n_tweets = 0
         self.n_quotes = 0
-        self.n_inquotes = 0
 
         self.tweets = {}
         self.quotes = defaultdict(list)
@@ -80,31 +78,22 @@ class ExtractRetweets(object):
                                 if tid not in self.tids:
                                     self.tids.add(tid)
                                     new += 1
-
-                                    self.n_tweets += 1
                                     if 'quoted_status' in tweet:
-                                        self.n_quotes += 1
                                         qs = tweet['quoted_status']
                                         quid = qs['user']['id']
                                         if quid in self.user_ids:
-                                            self.n_inquotes += 1
-                                        parent = qs
-                                        parent_id = parent['id_str']
-                                        self.quotes[parent_id].append(
-                                            self._simple(tweet))
-                                        self.tweets[parent_id] = self._simple(
-                                            parent)
-                                        self.parent[tweet['id_str']] =\
-                                            parent_id
+                                            self.n_quotes += 1
+                                            parent = qs
+                                            parent_id = parent['id_str']
+                                            self.quotes[parent_id].append(
+                                                self._simple(tweet))
+                                            self.tweets[parent_id] =\
+                                                self._simple(parent)
+                                            self.parent[tweet['id_str']] =\
+                                                parent_id
                             except json.decoder.JSONDecodeError:
                                 pass
-
-                    fields = ['n', 'tweets', 'quotes', 'inquotes']
-                    field_strs = ['# {}: {{}}'.format(field)
-                                  for field in fields]
-                    info_str = '; '.join(field_strs)
-                    print(info_str.format(
-                        i, self.n_tweets, self.n_quotes, self.n_inquotes))
+                    print('user #: {}; quotes: {}'.format(i, self.n_quotes))
         return new
 
     def run(self):
