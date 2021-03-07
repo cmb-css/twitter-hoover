@@ -58,25 +58,23 @@ class ExtractQuotes(object):
                         tweet = json.loads(line)
                         if 'quoted_status' in tweet:
                             tweet_id = tweet['id_str']
-                            if tweet_id not in self.tweets:
-                                qs = tweet['quoted_status']
-                                quid = qs['user']['id']
-                                if quid in self.user_ids:
-                                    self.n_quotes += 1
-                                    parent = qs
-                                    parent_id = parent['id_str']
+                            qs = tweet['quoted_status']
+                            quid = qs['user']['id']
+                            if quid in self.user_ids:
+                                self.n_quotes += 1
+                                parent = qs
+                                parent_id = parent['id_str']
 
-                                    # add parent if it does not exist yet
-                                    if parent_id not in self.tweets:
-                                        sparent = _simple(parent)
-                                        self.tweets[parent_id] = sparent
-                                        if not sparent['is_quote']:
-                                            self.n_trees += 1
+                                # add parent if it does not exist yet
+                                if parent_id not in self.tweets:
+                                    sparent = _simple(parent)
+                                    self.tweets[parent_id] = sparent
+                                    if not sparent['is_quote']:
+                                        self.n_trees += 1
 
-                                    stweet = _simple(tweet)
-                                    self.tweets[tweet_id] = stweet
-                                    self.tweets[parent_id]['quotes'].append(
-                                        stweet)
+                                stweet = _simple(tweet)
+                                self.tweets[tweet_id] = stweet
+                                self.tweets[parent_id]['quotes'].append(stweet)
                     except json.decoder.JSONDecodeError:
                         pass
 
