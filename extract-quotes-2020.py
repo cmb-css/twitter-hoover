@@ -17,11 +17,16 @@ def _simple(tweet):
         'friends_count': tweet['user']['friends_count'],
         'is_quote': tweet['is_quote_status'],
         'urls': [],
-        'quotes': []}
+        'hashtags': [],
+        'quotes': [],
+        'quote_ids': []}
     if 'entities' in tweet:
         if 'urls' in tweet['entities']:
             for url_entity in tweet['entities']['urls']:
                 data['urls'].append(url_entity['expanded_url'])
+        if 'hashtags' in tweet['entities']:
+            for hashtag_entity in tweet['entities']['hashtags']:
+                data['hashtags'].append(hashtag_entity['text'])
     return data
 
 
@@ -45,12 +50,18 @@ class ExtractQuotes(object):
     def _user_files(self, user_id):
         file_names = []
         for i in range(1, 13):
-            file_names += glob.glob(os.path.join(
-                self._user_path(user_id), '2020-{:02}.json.gz'.format(i)))
+            file_matches = glob.glob(os.path.join(
+                self._user_path(user_id),
+                '2020-{:02}-hydrated.json.gz'.format(i)))
+            if len(file_matches) > 0:
+                file_names += file_matches
+            else:
+                file_names += glob.glob(os.path.join(
+                    self._user_path(user_id), '2020-{:02}.json.gz'.format(i)))
         return file_names
 
     def _process_file(self, infile):
-        # print('infile: {}'.format(infile))
+        print('infile: {}'.format(infile))
         with gzip.open(infile, 'rt') as f:
             for line in f:
                 if self._filter(line):
@@ -72,9 +83,14 @@ class ExtractQuotes(object):
                                     if not sparent['is_quote']:
                                         self.n_trees += 1
 
-                                stweet = _simple(tweet)
-                                self.tweets[tweet_id] = stweet
-                                self.tweets[parent_id]['quotes'].append(stweet)
+                                if tweet_id not in self.tweets:
+                                    stweet = _simple(tweet)
+                                    self.tweets[tweet_id] = stweet
+                                ptweet = self.tweets[parent_id]
+                                if tweet_id not in ptweet['quote_ids']:
+                                    ptweet['quotes'].append(
+                                        self.tweets[tweet_id])
+                                    ptweet['quote_ids'].append(tweet_id)
                     except json.decoder.JSONDecodeError:
                         pass
 
@@ -91,6 +107,7 @@ class ExtractQuotes(object):
             for tid in self.tweets:
                 tweet = self.tweets[tid]
                 if not tweet['is_quote']:
+                    del tweet['quote_ids']
                     f.write('{}\n'.format(
                         json.dumps(tweet, ensure_ascii=False)))
 
