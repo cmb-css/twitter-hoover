@@ -106,7 +106,6 @@ class ExtractQuotes(object):
             for tid in self.tweets:
                 tweet = self.tweets[tid]
                 if not tweet['is_quote']:
-                    del tweet['quote_ids']
                     f.write('{}\n'.format(
                         json.dumps(tweet, ensure_ascii=False)))
 
