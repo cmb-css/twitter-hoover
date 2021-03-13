@@ -32,7 +32,7 @@ def _simple(tweet):
 
 class ExtractQuotes(object):
     def __init__(self, infile, indir, outfile):
-        self.user_ids = get_user_ids(infile)
+        self.user_ids = get_user_ids(infile)[:10]
         self.indir = indir
         self.outfile = outfile
 
@@ -103,8 +103,7 @@ class ExtractQuotes(object):
 
         # write trees
         with open(self.outfile, 'wt', encoding='utf-8') as f:
-            for tid in self.tweets:
-                tweet = self.tweets[tid]
+            for tid, tweet in self.tweets.iteritems():
                 if not tweet['is_quote']:
                     f.write('{}\n'.format(
                         json.dumps(tweet, ensure_ascii=False)))
