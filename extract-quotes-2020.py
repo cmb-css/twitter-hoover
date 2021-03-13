@@ -103,7 +103,7 @@ class ExtractQuotes(object):
 
         # write trees
         with open(self.outfile, 'wt', encoding='utf-8') as f:
-            for tid, tweet in self.tweets.iteritems():
+            for tid, tweet in self.tweets.iter():
                 if not tweet['is_quote']:
                     f.write('{}\n'.format(
                         json.dumps(tweet, ensure_ascii=False)))
