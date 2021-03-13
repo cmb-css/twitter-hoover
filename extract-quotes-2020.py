@@ -32,7 +32,7 @@ def _simple(tweet):
 
 class ExtractQuotes(object):
     def __init__(self, infile, indir, outfile):
-        self.user_ids = get_user_ids(infile)[:10]
+        self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
 
