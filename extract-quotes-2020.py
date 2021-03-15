@@ -31,10 +31,11 @@ def _simple(tweet):
 
 
 class ExtractQuotes(object):
-    def __init__(self, infile, indir, outfile):
+    def __init__(self, infile, indir, outfile, month):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
+        self.month = month
 
         self.n_trees = 0
         self.n_quotes = 0
@@ -49,15 +50,16 @@ class ExtractQuotes(object):
 
     def _user_files(self, user_id):
         file_names = []
-        for i in range(1, 13):
-            file_matches = glob.glob(os.path.join(
-                self._user_path(user_id),
-                '2020-{:02}-hydrated.json.gz'.format(i)))
-            if len(file_matches) > 0:
-                file_names += file_matches
-            else:
-                file_names += glob.glob(os.path.join(
-                    self._user_path(user_id), '2020-{:02}.json.gz'.format(i)))
+
+        file_matches = glob.glob(os.path.join(
+            self._user_path(user_id),
+            '2020-{:02}-hydrated.json.gz'.format(self.month)))
+        if len(file_matches) > 0:
+            file_names += file_matches
+        else:
+            file_names += glob.glob(os.path.join(
+                self._user_path(user_id), '2020-{:02}.json.gz'.format(
+                    self.month)))
         return file_names
 
     def _process_file(self, infile):
@@ -110,6 +112,8 @@ class ExtractQuotes(object):
 
 
 if __name__ == '__main__':
-    tr = ExtractQuotes(
-        'eu-elections-userids.csv', 'timelines', 'quotes-2020.json')
-    tr.run()
+    for i in range(1, 13):
+        tr = ExtractQuotes(
+            'eu-elections-userids.csv', 'timelines',
+            'quotes-2020-{:02}.json'.format(i), i)
+        tr.run()
