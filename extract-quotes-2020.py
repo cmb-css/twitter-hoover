@@ -51,17 +51,12 @@ class ExtractQuotes(object):
         return os.path.join(self.indir, str(user_id))
 
     def _user_files(self, user_id):
-        file_names = []
-
-        file_matches = glob.glob(os.path.join(
+        file_names = glob.glob(os.path.join(
             self._user_path(user_id),
             '2020-{:02}-hydrated.json.gz'.format(self.month)))
-        if len(file_matches) > 0:
-            file_names += file_matches
-        else:
-            file_names += glob.glob(os.path.join(
-                self._user_path(user_id), '2020-{:02}.json.gz'.format(
-                    self.month)))
+        file_names += glob.glob(os.path.join(
+            self._user_path(user_id), '2020-{:02}.json.gz'.format(
+                self.month)))
         return file_names
 
     def _process_file(self, infile):
