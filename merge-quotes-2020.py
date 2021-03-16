@@ -17,7 +17,7 @@ class MergeQuotes:
             if tid not in self.root_ids:
                 self.cur_tweets[tid] = quote
                 self.root_ids.add(tid)
-            self.add_quotes(quote)
+            self._add_quotes(quote)
 
     def _month_tweets(self, month):
         self.cur_tweets = {}
