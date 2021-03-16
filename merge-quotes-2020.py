@@ -2,7 +2,7 @@ import json
 
 
 def month2file(month):
-    return 'quotes-2020-{:02}.json'
+    return 'quotes-2020-{:02}.json'.format(month)
 
 
 class MergeQuotes:
