@@ -60,7 +60,7 @@ class ExtractQuotes(object):
         return file_names
 
     def _process_file(self, infile):
-        print('infile: {}'.format(infile))
+        # print('infile: {}'.format(infile))
         with gzip.open(infile, 'rt') as f:
             for line in f:
                 if self._filter(line):
