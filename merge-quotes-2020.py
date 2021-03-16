@@ -57,12 +57,5 @@ class MergeQuotes:
 
 
 if __name__ == '__main__':
-    tweets = {}
-    with open('quotes-2020-01.json', 'rt') as f:
-        for line in f:
-            tweet = json.loads(line)
-            tweets[tweet['id']] = tweet
-
-    for i in range(1, 13):
-        mq = MergeQuotes('quotes-2020.json')
-        mq.run()
+    mq = MergeQuotes('quotes-2020.json')
+    mq.run()
