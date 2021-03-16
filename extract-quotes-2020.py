@@ -89,7 +89,7 @@ class ExtractQuotes(object):
 
                                 if tweet_id not in self.tweets:
                                     self.tweets[tweet_id] = _simple(tweet)
-                                self.tweets[tweet_id].root = False
+                                self.tweets[tweet_id]['root'] = False
                                 ptweet = self.tweets[parent_id]
                                 if tweet_id not in ptweet['quote_ids']:
                                     ptweet['quotes'].append(
