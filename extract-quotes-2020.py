@@ -1,3 +1,4 @@
+import argparse
 import glob
 import gzip
 import json
@@ -9,6 +10,7 @@ def _simple(tweet):
     text = tweet['full_text'] if 'full_text' in tweet else tweet['text']
     data = {
         'id': tweet['id_str'],
+        'root': True,
         'text': text,
         'created_at': tweet['created_at'],
         'user': tweet['user']['screen_name'],
@@ -87,6 +89,7 @@ class ExtractQuotes(object):
 
                                 if tweet_id not in self.tweets:
                                     self.tweets[tweet_id] = _simple(tweet)
+                                self.tweets[tweet_id].root = False
                                 ptweet = self.tweets[parent_id]
                                 if tweet_id not in ptweet['quote_ids']:
                                     ptweet['quotes'].append(
@@ -106,14 +109,25 @@ class ExtractQuotes(object):
         # write trees
         with open(self.outfile, 'wt', encoding='utf-8') as f:
             for tid, tweet in self.tweets.items():
-                if not tweet['is_quote']:
+                if tweet['root']:
                     f.write('{}\n'.format(
                         json.dumps(tweet, ensure_ascii=False)))
 
 
 if __name__ == '__main__':
-    for i in range(1, 13):
-        tr = ExtractQuotes(
-            'eu-elections-userids.csv', 'timelines',
-            'quotes-2020-{:02}.json'.format(i), i)
-        tr.run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--outfile', type=str,
+                        help='output file', default=None)
+    parser.add_argument('--month', type=int,
+                        help='month', default=None)
+    args = parser.parse_args()
+
+    outfile = args.outfile
+    month = args.month
+
+    print('outfile: {}'.format(outfile))
+    print('month: {:02}'.format(month))
+
+    tr = ExtractQuotes(
+        'eu-elections-userids.csv', 'timelines', outfile, month)
+    tr.run()
