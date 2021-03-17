@@ -20,6 +20,9 @@ def _simple(tweet):
         'is_quote': tweet['is_quote_status'],
         'urls': [],
         'hashtags': [],
+        'in_reply_to_user': tweet['in_reply_to_screen_name'],
+        'in_reply_to_user_id': tweet['in_reply_to_user_id_str'],
+        'in_reply_to_status_id': tweet['in_reply_to_status_id_str'],
         'quotes': [],
         'quote_ids': []}
     if 'entities' in tweet:
