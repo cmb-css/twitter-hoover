@@ -1,4 +1,3 @@
-import argparse
 import glob
 import gzip
 import json
@@ -18,12 +17,11 @@ def get_tweet_ids(tweet_ids_file):
 
 
 class ExtractRetweets(object):
-    def __init__(self, tweet_ids_file, infile, indir, outfile, month):
+    def __init__(self, tweet_ids_file, infile, indir, outfile):
         self.tweet_ids = get_tweet_ids(tweet_ids_file)
         self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
-        self.month = month
 
         self.retweet_ids = set()
         self.retweets = {}
@@ -35,12 +33,13 @@ class ExtractRetweets(object):
         return os.path.join(self.indir, str(user_id))
 
     def _user_files(self, user_id):
-        file_names = glob.glob(os.path.join(
-            self._user_path(user_id),
-            '2020-{:02}-hydrated.json.gz'.format(self.month)))
-        file_names += glob.glob(os.path.join(
-            self._user_path(user_id), '2020-{:02}.json.gz'.format(
-                self.month)))
+        file_names = []
+        for month in range(1, 13):
+            file_names += glob.glob(os.path.join(
+                self._user_path(user_id),
+                '2020-{:02}-hydrated.json.gz'.format(month)))
+            file_names += glob.glob(os.path.join(
+                self._user_path(user_id), '2020-{:02}.json.gz'.format(month)))
         return file_names
 
     def _process_file(self, infile):
@@ -77,20 +76,7 @@ class ExtractRetweets(object):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--outfile', type=str,
-                        help='output file', default=None)
-    parser.add_argument('--month', type=int,
-                        help='month', default=None)
-    args = parser.parse_args()
-
-    outfile = args.outfile
-    month = args.month
-
-    print('outfile: {}'.format(outfile))
-    print('month: {:02}'.format(month))
-
     tr = ExtractRetweets(
         'quotes-2020-tweet-ids.csv', 'eu-elections-userids.csv', 'timelines',
-        outfile, month)
+        'retweets-2020.json')
     tr.run()
