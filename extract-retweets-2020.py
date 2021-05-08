@@ -13,6 +13,8 @@ def get_tweet_ids(tweet_ids_file):
             tid = line.strip()
             if len(tid) > 0:
                 tweet_ids.add(tid)
+    print('{} tweet ids read'.format(len(tweet_ids)))
+    return tweet_ids
 
 
 class ExtractRetweets(object):
