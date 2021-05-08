@@ -55,9 +55,9 @@ class ExtractRetweets(object):
                                 if retweet_id not in self.retweet_ids:
                                     self.retweet_ids.add(retweet_id)
                                     user_id = tweet['user']['id_str']
-                                    if tweet_id not in self.retweets[]:
+                                    if tweet_id not in self.retweets:
                                         self.retweets[tweet_id] = []
-                                    self.retweets[tweet_id].append()
+                                    self.retweets[tweet_id].append(user_id)
                     except json.decoder.JSONDecodeError:
                         pass
 
