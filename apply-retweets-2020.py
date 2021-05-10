@@ -32,5 +32,6 @@ class ApplyRetweets:
 
 
 if __name__ == '__main__':
-    ar = ApplyRetweets('quotes-2020.json')
+    ar = ApplyRetweets(
+        'quotes-2020.json', 'quotes-2020+retweets.json', 'retweets-2020.json')
     ar.run()
