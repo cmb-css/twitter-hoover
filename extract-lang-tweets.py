@@ -37,7 +37,6 @@ class ExtractLangTweets(object):
                         gzip.open(self.outfile, 'wt') as of:
                     for line in f:
                         if self.lang_str in line:
-                            self.tweets += 1
                             of.write('{}\n'.format(line))
 
 
