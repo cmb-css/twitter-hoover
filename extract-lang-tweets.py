@@ -1,3 +1,4 @@
+import argparse
 import os
 import glob
 import gzip
@@ -34,17 +35,34 @@ class ExtractLangTweets(object):
                 user_id, i, len(self.user_ids)))
             for infile in self._user_files(user_id):
                 with gzip.open(infile, 'rt') as f,\
-                        gzip.open(self.outfile, 'wt') as of:
+                        gzip.open(self.outfile, 'at') as of:
                     for line in f:
                         if self.lang_str in line:
                             of.write('{}\n'.format(line))
 
 
 if __name__ == '__main__':
-    tr = ExtractLangTweets(
-        'eu-elections-userids.csv',
-        'timelines',
-        'fr-2019-12.json.gz',
-        'fr',
-        '2019-12')
-    tr.run()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--infile', type=str,
+                        help='input file', default='eu-elections-userids.csv')
+    parser.add_argument('--outfile', type=str,
+                        help='output file', default=None)
+    parser.add_argument('--indir', type=str,
+                        help='input directory', default='timelines')
+    parser.add_argument('--outdir', type=str,
+                        help='output directory', default=None)
+    parser.add_argument('--lang', type=str,
+                        help='language', default=None)
+    parser.add_argument('--month', type=str, help='month',
+                        default=None)
+
+    args = parser.parse_args()
+
+    elt = ExtractLangTweets(
+        args.infile,
+        args.indir,
+        args.outfile,
+        args.lang,
+        args.month)
+    elt.run()
