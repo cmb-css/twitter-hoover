@@ -36,10 +36,11 @@ def _simple(tweet):
 
 
 class ExtractQuotes(object):
-    def __init__(self, infile, indir, outfile, month):
+    def __init__(self, infile, indir, outfile, year, month):
         self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
+        self.year = year
         self.month = month
 
         self.n_trees = 0
@@ -56,10 +57,10 @@ class ExtractQuotes(object):
     def _user_files(self, user_id):
         file_names = glob.glob(os.path.join(
             self._user_path(user_id),
-            '2020-{:02}-hydrated.json.gz'.format(self.month)))
+            '{}-{:02}-hydrated.json.gz'.format(self.year, self.month)))
         file_names += glob.glob(os.path.join(
-            self._user_path(user_id), '2020-{:02}.json.gz'.format(
-                self.month)))
+            self._user_path(user_id), '{}-{:02}.json.gz'.format(
+                self.year, self.month)))
         return file_names
 
     def _process_file(self, infile):
@@ -116,16 +117,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--outfile', type=str,
                         help='output file', default=None)
+    parser.add_argument('--year', type=int,
+                        help='year', default=None)
     parser.add_argument('--month', type=int,
                         help='month', default=None)
     args = parser.parse_args()
 
     outfile = args.outfile
+    year = args.year
     month = args.month
 
     print('outfile: {}'.format(outfile))
+    print('year: {}'.format(year))
     print('month: {:02}'.format(month))
 
     tr = ExtractQuotes(
-        'eu-elections-userids.csv', 'timelines', outfile, month)
+        'eu-elections-userids.csv', 'timelines', outfile, year, month)
     tr.run()

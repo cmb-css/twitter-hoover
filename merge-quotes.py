@@ -1,15 +1,16 @@
+import argparse
 import json
 
 
-def month2file(month):
-    return 'quotes-2020-{:02}.json'.format(month)
-
-
 class MergeQuotes:
-    def __init__(self, outfile):
+    def __init__(self, outfile, year):
         self.outfile = outfile
+        self.year = year
         self.root_ids = set()
         self.cur_tweets = {}
+
+    def _month2file(self, month):
+        return 'quotes-{}-{:02}.json'.format(self.year, month)
 
     def _add_quotes(self, tweet):
         for quote in tweet['quotes']:
@@ -21,7 +22,7 @@ class MergeQuotes:
 
     def _month_tweets(self, month):
         self.cur_tweets = {}
-        with open(month2file(month), 'rt') as f:
+        with open(self._month2file(month), 'rt') as f:
             for line in f:
                 tweet = json.loads(line)
                 tid = tweet['id']
@@ -32,7 +33,7 @@ class MergeQuotes:
 
     def _merge_trees(self, month):
         for i in range(month + 1, 13):
-            with open(month2file(i), 'rt') as f:
+            with open(self._month2file(i), 'rt') as f:
                 for line in f:
                     tweet = json.loads(line)
                     tid = tweet['id']
@@ -57,5 +58,17 @@ class MergeQuotes:
 
 
 if __name__ == '__main__':
-    mq = MergeQuotes('quotes-2020.json')
-    mq.run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--outfile', type=str,
+                        help='output file', default=None)
+    parser.add_argument('--year', type=int, help='year', default=None)
+    args = parser.parse_args()
+
+    outfile = args.outfile
+    year = args.year
+
+    print('outfile: {}'.format(outfile))
+    print('year: {}'.format(year))
+
+    tr = MergeQuotes(outfile, year)
+    tr.run()
