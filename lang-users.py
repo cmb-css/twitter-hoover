@@ -33,6 +33,7 @@ class LangUsers(object):
             self.n_users += 1
             user_tweets = 0
             lang_counter = Counter()
+            screen_name = '?'
             done = False
             for infile in self._user_files(user_id):
                 if done:
@@ -47,6 +48,10 @@ class LangUsers(object):
                         try:
                             tweet = json.loads(line)
                             lang_counter[tweet['lang']] += 1
+                            if (screen_name == '?' and
+                                    tweet['user']['id'] == user_id):
+                                screen_name = tweet['user']['screen_name']
+
                         except json.decoder.JSONDecodeError:
                             pass
 
@@ -54,15 +59,17 @@ class LangUsers(object):
                 percents = list((lang, (count / user_tweets) * 100.0)
                                 for lang, count in lang_counter.most_common())
                 if percents[0][0] == self.lang and percents[0][1] >= 15.0:
-                    self.lang_users.append(user_id)
+                    self.lang_users.append((user_id, screen_name))
                 print(' | '.join(['{} {:.0f}%'.format(lang, percent)
                       for lang, percent in percents]))
             print('users: {}; lang-users: {}'.format(
                 self.n_users, len(self.lang_users)))
 
         with open(self.outfile, 'wt') as f:
-            for uid in self.lang_users:
-                f.write('{}\n'.format(json.dumps(uid)))
+            f.write('user_id,screen_name,profile\n')
+            for user_id, screen_name in self.lang_users:
+                f.write('{},{},https://twitter.com/{}\n'.format(
+                    user_id, screen_name, screen_name))
 
 
 if __name__ == '__main__':
