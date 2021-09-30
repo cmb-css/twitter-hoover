@@ -1,3 +1,4 @@
+import argparse
 import os
 import glob
 import gzip
@@ -65,6 +66,16 @@ class LangUsers(object):
 
 
 if __name__ == '__main__':
-    tr = LangUsers(
-        'eu-elections-userids.csv', 'timelines', 'fr-userids.csv', 'fr')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--lang', type=str, help='language')
+    parser.add_argument('--outfile', type=str, help='output file')
+    args = parser.parse_args()
+
+    lang = args.lang
+    outfile = args.outfile
+
+    print('lang: {}'.format(lang))
+    print('outfile: {}'.format(outfile))
+
+    tr = LangUsers('eu-elections-userids.csv', 'timelines', outfile, lang)
     tr.run()
