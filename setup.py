@@ -27,6 +27,11 @@ setup(
     packages=find_packages(),
     install_requires=[
         'twython',
+        'tweepy',
+        'cryptography',
+        'pandas',
+        'tenacity',
+        'pycryptodome'
     ],
     entry_points='''
         [console_scripts]
