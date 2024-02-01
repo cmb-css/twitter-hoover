@@ -107,21 +107,19 @@ def anonymize_v2(response, anon_dict):
         if key == 'text':
             output_dict['text'] = anonymize_text(text=response['text'], anon_dict=anon_dict)
         elif key == 'id':
-            output_dict['id'] = anonymize(data_dict=response, dict_key=key,
-                                                                  object_type='tweet', anon_dict=anon_dict)
+            output_dict['id'] = anonymize(data_dict=response, dict_key=key, object_type='tweet', anon_dict=anon_dict)
         elif key == 'author_id':
             output_dict['user_id'] = anonymize(data_dict=response, dict_key=key,
-                                                                  object_type='user', anon_dict=anon_dict)
+                                               object_type='user', anon_dict=anon_dict)
         elif key == 'in_reply_to_user_id':
             if len(response[key]) > 0:
                 output_dict[key] = anonymize(data_dict=response, dict_key=key,
-                                                                      object_type='tweet', anon_dict=anon_dict)
+                                             object_type='tweet', anon_dict=anon_dict)
             else:
                 output_dict[key] = ''
         elif key == 'username':
             output_dict['screen_name'] = anonymize(data_dict=response, dict_key=key,
-                                                               object_type='user',
-                                                               anon_dict=anon_dict)
+                                                   object_type='user', anon_dict=anon_dict)
         elif key == 'description':
             if len(response[key]) > 0:
                 output_dict[key] = anonymize_text(text=response[key], anon_dict=anon_dict)
@@ -129,30 +127,26 @@ def anonymize_v2(response, anon_dict):
                 output_dict[key] = ''
         elif key == 'url':
             if len(response['url']) > 0:
-                output_dict[key] = anonymize(data_dict=response, dict_key=key,
-                                                                   object_type='user',
-                                                                   anon_dict=anon_dict)
+                output_dict[key] = anonymize(data_dict=response, dict_key=key, object_type='user', anon_dict=anon_dict)
             else:
                 output_dict[key] = ''
         elif key == 'entities':
-            output_dict[key] = dict()
-            anonymized_mentions_list = list()
-            for mention_dict in response[key]['mentions']:
-                mention_dict['username'] = anonymize(data_dict=mention_dict, dict_key='username',
-                                                               object_type='user',
-                                                               anon_dict=anon_dict)
-                mention_dict['id'] = anonymize(data_dict=mention_dict, dict_key='id',
-                                                               object_type='user',
-                                                               anon_dict=anon_dict)
-                anonymized_mentions_list.append(mention_dict)
-            output_dict[key]['mentions'] = anonymized_mentions_list
+            if 'mentions' in response[key]:
+                output_dict[key] = dict()
+                anonymized_mentions_list = list()
+                for mention_dict in response[key]['mentions']:
+                    mention_dict['username'] = anonymize(data_dict=mention_dict, dict_key='username',
+                                                         object_type='user', anon_dict=anon_dict)
+                    mention_dict['id'] = anonymize(data_dict=mention_dict, dict_key='id',
+                                                   object_type='user', anon_dict=anon_dict)
+                    anonymized_mentions_list.append(mention_dict)
+                output_dict[key]['mentions'] = anonymized_mentions_list
         elif key == 'referenced_tweets':
             referenced_tweets_list = response[key]
             anonymized_referenced_tweets_list = list()
             for count, referenced_tweet_dict in enumerate(referenced_tweets_list):
                 referenced_tweet_dict['id'] = anonymize(data_dict=referenced_tweet_dict, dict_key='id',
-                                                               object_type='tweet',
-                                                               anon_dict=anon_dict)
+                                                        object_type='tweet', anon_dict=anon_dict)
                 anonymized_referenced_tweets_list.append(referenced_tweet_dict)
             output_dict[key] = anonymized_referenced_tweets_list
         else:
