@@ -104,32 +104,31 @@ def log_date_month_string_if_new(date_month_str, old_date_month_str):
 def anonymize_v2(response, anon_dict):
     output_dict = dict()
     for key in response.keys():
-        if key == 'text':
-            output_dict['text'] = anonymize_text(text=response['text'], anon_dict=anon_dict)
-        elif key == 'id':
-            output_dict['id'] = anonymize(data_dict=response, dict_key=key, object_type='tweet', anon_dict=anon_dict)
-        elif key == 'author_id':
-            output_dict['user_id'] = anonymize(data_dict=response, dict_key=key,
-                                               object_type='user', anon_dict=anon_dict)
-        elif key == 'in_reply_to_user_id':
+        if key in {'text', 'description'}:
+            if len(response[key]) > 0:
+                output_dict[key] = anonymize_text(text=response[key], anon_dict=anon_dict)
+            else:
+                output_dict[key] = ''
+        elif key in {'id', 'in_reply_to_user_id', 'conversation_id'}:
             if len(response[key]) > 0:
                 output_dict[key] = anonymize(data_dict=response, dict_key=key,
                                              object_type='tweet', anon_dict=anon_dict)
             else:
                 output_dict[key] = ''
-        elif key == 'username':
-            output_dict['screen_name'] = anonymize(data_dict=response, dict_key=key,
-                                                   object_type='user', anon_dict=anon_dict)
-        elif key == 'description':
+        elif key in {'url', 'pinned_tweet_id', 'profile_image_url'}:
             if len(response[key]) > 0:
-                output_dict[key] = anonymize_text(text=response[key], anon_dict=anon_dict)
-            else:
-                output_dict[key] = ''
-        elif key == 'url':
-            if len(response['url']) > 0:
                 output_dict[key] = anonymize(data_dict=response, dict_key=key, object_type='user', anon_dict=anon_dict)
             else:
                 output_dict[key] = ''
+        elif key in {'edit_history_tweet_ids'}:
+            output_dict[key] = [anonymize(data_dict=tweet_id, dict_key=key, object_type='text', anon_dict=anon_dict)
+                                for tweet_id in response[key]]
+        elif key == 'author_id':
+            output_dict['user_id'] = anonymize(data_dict=response, dict_key=key,
+                                               object_type='user', anon_dict=anon_dict)
+        elif key == 'username':
+            output_dict['screen_name'] = anonymize(data_dict=response, dict_key=key,
+                                                   object_type='user', anon_dict=anon_dict)
         elif key == 'entities':
             if 'mentions' in response[key]:
                 output_dict[key] = dict()
