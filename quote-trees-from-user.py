@@ -2,11 +2,24 @@ import argparse
 import json
 
 
+def tree_metrics(tweet):
+    size = 1
+    max_depth = 0
+    for quote in tweet['quotes']:
+        _size, _depth = tree_metrics(quote)
+        size += _size
+        if _depth > max_depth:
+                max_depth = _depth
+    return size, max_depth + 1
+
+
 class QuoteTreesFromUser:
     def __init__(self, infile, outfile, user_id):
         self.infile = infile
         self.outfile = outfile
         self.user_id = user_id
+        self.max_size = -1
+        self.max_depth = -1
 
         self.trees = []
 
@@ -32,18 +45,24 @@ class QuoteTreesFromUser:
                         if self.user_id in line:
                             tweet = json.loads(line)
                             if str(tweet['user_id']) == self.user_id:
-                                print(tweet['user_id'])
+                                size, depth = tree_metrics(tweet)
+                                print(size, depth)
+                                if size > self.max_size:
+                                    self.max_size = size
+                                if depth > self.max_depth:
+                                    self.max_depth = depth
                                 self.trees.append(tweet)
                                 print(len(self.trees))
                     except json.decoder.JSONDecodeError:
                         pass
 
+        print('#trees: {}'.format(len(self.trees)))
+        print(f'max size: {self.max_size} | max depth: {self.max_depth}')
+
         # write trees
-        # with open(self.outfile, 'wt', encoding='utf-8') as f:
-        #     for tid, tweet in self.tweets.items():
-        #         if tweet['root']:
-        #             f.write('{}\n'.format(
-        #                 json.dumps(tweet, ensure_ascii=False)))
+        with open(self.outfile, 'wt', encoding='utf-8') as f:
+            for tweet in self.tweets:
+                f.write('{}\n'.format(json.dumps(tweet, ensure_ascii=False)))
 
 
 if __name__ == '__main__':
