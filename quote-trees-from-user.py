@@ -1,5 +1,4 @@
 import argparse
-import gzip
 import json
 
 
@@ -12,7 +11,7 @@ class QuoteTreesFromUser:
         self.trees = []
 
     def run(self):
-        with gzip.open(self.infile, 'rt') as f:
+        with open(self.infile, 'rt') as f:
             for line in f:
                 try:
                     if self.user_id in line:
