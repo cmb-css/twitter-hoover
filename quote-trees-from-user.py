@@ -36,8 +36,8 @@ def _simple(tweet):
 
 
 class QuoteTreesFromUser:
-    def __init__(self, infile, indir, outfile, userid):
-        self.user_ids = get_user_ids(infile)
+    def __init__(self, indir, outfile, userid):
+        # self.user_ids = get_user_ids(infile)
         self.indir = indir
         self.outfile = outfile
         self.userid = userid
