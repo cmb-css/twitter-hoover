@@ -16,7 +16,7 @@ class QuoteTreesFromUser:
                 try:
                     if self.user_id in line:
                         tweet = json.loads(line)
-                        if tweet['user_id'] == self.user_id:
+                        if str(tweet['user_id']) == self.user_id:
                             print(tweet['user_id'])
                             self.trees.append(tweet)
                             print(len(self.trees))
