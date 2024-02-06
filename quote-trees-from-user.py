@@ -10,7 +10,7 @@ class QuoteTreesFromUser:
 
         self.trees = []
 
-    def _filter(line):
+    def _filter(self, line):
         lline = line.lower()
         if 'covid' in lline:
             return True
