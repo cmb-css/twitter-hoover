@@ -36,8 +36,9 @@ def _simple(tweet):
 
 
 class QuoteTreesFromUser:
-    def __init__(self, infile, outfile, userid):
+    def __init__(self, infile, indir, outfile, userid):
         self.user_ids = get_user_ids(infile)
+        self.indir = indir
         self.outfile = outfile
         self.userid = userid
 
@@ -54,12 +55,7 @@ class QuoteTreesFromUser:
         return os.path.join(self.indir, str(user_id))
 
     def _user_files(self, user_id):
-        file_names = glob.glob(os.path.join(
-            self._user_path(user_id),
-            '{}-{:02}-hydrated.json.gz'.format(self.year, self.month)))
-        file_names += glob.glob(os.path.join(
-            self._user_path(user_id), '{}-{:02}.json.gz'.format(self.year, self.month)))
-        return file_names
+        return glob.glob(os.path.join(self._user_path(user_id), '*.json.gz'))
 
     def _process_file2(self, infile):
         with gzip.open(infile, 'rt') as f:
@@ -95,6 +91,7 @@ class QuoteTreesFromUser:
                         pass
 
     def _process_file(self, infile):
+        print('processing file: {}'.format(infile))
         with gzip.open(infile, 'rt') as f:
             for line in f:
                 try:
@@ -133,18 +130,18 @@ class QuoteTreesFromUser:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--infile', type=str, help='input file', default=None)
+    parser.add_argument('--indir', type=str, help='directory with timelines', default=None)
     parser.add_argument('--outfile', type=str, help='output file', default=None)
     parser.add_argument('--userid', type=str, help='user id', default=None)
     args = parser.parse_args()
 
-    infile = args.infile
+    indir = args.indir
     outfile = args.outfile
     userid = args.userid
 
-    print('infile: {}'.format(infile))
+    print('indir: {}'.format(indir))
     print('outfile: {}'.format(outfile))
     print('user id: {}'.format(userid))
 
-    qtfu = QuoteTreesFromUser(outfile, userid)
+    qtfu = QuoteTreesFromUser(indir, outfile, userid)
     qtfu.run()
