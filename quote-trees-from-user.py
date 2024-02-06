@@ -10,18 +10,33 @@ class QuoteTreesFromUser:
 
         self.trees = []
 
+    def _filter(line):
+        lline = line.lower()
+        if 'covid' in lline:
+            return True
+        if 'corona' in lline:
+            return True
+        if 'mask' in lline:
+            return True
+        if 'impf' in lline:
+            return True
+        if 'vaccine' in lline:
+            return True
+        return False
+
     def run(self):
         with open(self.infile, 'rt') as f:
             for line in f:
-                try:
-                    if self.user_id in line:
-                        tweet = json.loads(line)
-                        if str(tweet['user_id']) == self.user_id:
-                            print(tweet['user_id'])
-                            self.trees.append(tweet)
-                            print(len(self.trees))
-                except json.decoder.JSONDecodeError:
-                    pass
+                if self._filter(line):
+                    try:
+                        if self.user_id in line:
+                            tweet = json.loads(line)
+                            if str(tweet['user_id']) == self.user_id:
+                                print(tweet['user_id'])
+                                self.trees.append(tweet)
+                                print(len(self.trees))
+                    except json.decoder.JSONDecodeError:
+                        pass
 
         # write trees
         # with open(self.outfile, 'wt', encoding='utf-8') as f:
