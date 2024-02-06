@@ -55,7 +55,7 @@ class QuoteTreesFromUser:
                         pass
 
         print('#trees: {}'.format(len(self.trees)))
-        print('max size: {} | max depth: {self.max_depth}'.format(self.max_size, self.max_depth))
+        print('max size: {} | max depth: {}'.format(self.max_size, self.max_depth))
 
         # write trees
         with open(self.outfile, 'wt', encoding='utf-8') as f:
