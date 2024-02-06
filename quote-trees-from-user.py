@@ -60,7 +60,7 @@ class QuoteTreesFromUser:
         # write trees
         with open(self.outfile, 'wt') as f:
             for tree in self.trees:
-                f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)))
+                f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)).encode('utf-8'))
 
 
 if __name__ == '__main__':
