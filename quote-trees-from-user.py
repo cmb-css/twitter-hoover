@@ -59,8 +59,8 @@ class QuoteTreesFromUser:
 
         # write trees
         with open(self.outfile, 'wt') as f:
-            for tweet in self.tweets:
-                f.write('{}\n'.format(json.dumps(tweet, ensure_ascii=False)))
+            for tree in self.trees:
+                f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)))
 
 
 if __name__ == '__main__':
