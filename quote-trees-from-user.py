@@ -46,13 +46,11 @@ class QuoteTreesFromUser:
                             tweet = json.loads(line)
                             if str(tweet['user_id']) == self.user_id:
                                 size, depth = tree_metrics(tweet)
-                                print(size, depth)
                                 if size > self.max_size:
                                     self.max_size = size
                                 if depth > self.max_depth:
                                     self.max_depth = depth
                                 self.trees.append(tweet)
-                                print(len(self.trees))
                     except json.decoder.JSONDecodeError:
                         pass
 
