@@ -12,7 +12,7 @@ class QuoteTreesFromUser:
         self.trees = []
 
     def run(self):
-        with gzip.open(infile, 'rt') as f:
+        with gzip.open(self.infile, 'rt') as f:
             for line in f:
                 try:
                     if self.user_id in line:
