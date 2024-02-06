@@ -58,9 +58,9 @@ class QuoteTreesFromUser:
         print('max size: {} | max depth: {}'.format(self.max_size, self.max_depth))
 
         # write trees
-        with open(self.outfile, 'wt') as f:
+        with open(self.outfile, 'wt', encoding='utf-8') as f:
             for tree in self.trees:
-                f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)).encode('utf-8'))
+                f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)))
 
 
 if __name__ == '__main__':
