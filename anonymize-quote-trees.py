@@ -9,7 +9,7 @@ from hoover.anon.anonymize_v1 import anonymize_raw, anonymize_text
 # 'UID' for user ID, 'USN' for user name, 'TID' for tweet ID and 'TURL' for tweet URL.
 def anonymize_tree(tree, anon_dict):
     tree['id'] = anonymize_raw(str(tree['id']), 'TID', anon_dict)
-    tree['text'] = anonymize_text(tree['text'], anon_dict)
+    # tree['text'] = anonymize_text(tree['text'], anon_dict)
     tree['user'] = anonymize_raw(tree['user'], 'USN', anon_dict)
     tree['user_id'] = anonymize_raw(str(tree['user_id']), 'UID', anon_dict)
     tree['urls'] = [anonymize_raw(url, 'TURL', anon_dict) for url in tree['urls']]
@@ -23,6 +23,7 @@ def anonymize_tree(tree, anon_dict):
     tree['quote_ids'] = [anonymize_raw(str(quote_id), 'TID', anon_dict) for quote_id in tree['quote_ids']]
     if 'retweeters' in tree:
         tree['retweeters'] = [anonymize_raw(str(user_id), 'UID', anon_dict) for user_id in tree['retweeters']]
+    return tree
 
 
 if __name__ == '__main__':
@@ -47,7 +48,7 @@ if __name__ == '__main__':
         for line in in_f:
             n += 1
             tree = json.loads(line)
-            anonymize_tree(tree, anon_dict)
+            tree = anonymize_tree(tree, anon_dict)
             tree_str = json.dumps(tree)
             out_f.write(f'{tree_str}\n')
 
