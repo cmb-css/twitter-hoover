@@ -13,9 +13,12 @@ def anonymize_tree(tree, anon_dict):
     tree['user'] = anonymize_raw(tree['user'], 'USN', anon_dict)
     tree['user_id'] = anonymize_raw(str(tree['user_id']), 'UID', anon_dict)
     tree['urls'] = [anonymize_raw(url, 'TURL', anon_dict) for url in tree['urls']]
-    tree['in_reply_to_user'] = anonymize_raw(tree['in_reply_to_user'], 'USN', anon_dict)
-    tree['in_reply_to_user_id'] = anonymize_raw(str(tree['in_reply_to_user_id']), 'UID', anon_dict)
-    tree['in_reply_to_status_id'] = anonymize_raw(str(tree['in_reply_to_status_id']), 'TID', anon_dict)
+    if 'in_reply_to_user' in tree:
+        tree['in_reply_to_user'] = anonymize_raw(tree['in_reply_to_user'], 'USN', anon_dict)
+    if 'in_reply_to_user_id' in tree:
+        tree['in_reply_to_user_id'] = anonymize_raw(str(tree['in_reply_to_user_id']), 'UID', anon_dict)
+    if 'in_reply_to_status_id' in tree:
+        tree['in_reply_to_status_id'] = anonymize_raw(str(tree['in_reply_to_status_id']), 'TID', anon_dict)
     tree['quotes'] = [anonymize_tree(_tree, anon_dict) for _tree in tree['quotes']]
     tree['quote_ids'] = [anonymize_raw(str(quote_id), 'TID', anon_dict) for quote_id in tree['quote_ids']]
     if 'retweeters' in tree:
