@@ -17,21 +17,29 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--infile', type=str, help='file with all userids', default=None)
     parser.add_argument('--outfile', type=str, help='output file', default=None)
+    parser.add_argument('--minsize', type=int, help='minimum number of tree nodes', default=5)
     args = parser.parse_args()
 
     infile = args.infile
     outfile = args.outfile
+    minsize = args.minsize
     
     print('infile: {}'.format(infile))
     print('outfile: {}'.format(outfile))
+    print('minsize: {}'.format(minsize))
     
     with open(infile, 'rt') as f:
         trees = [json.loads(line) for line in f]
     
-    metrics = [tree_metrics(tree) for tree in trees]
+    n = 0
+    _n = 0
+    with open(infile, 'rt') as in_f, open(outfile, 'wt') as out_f:
+        for line in in_f:
+            n += 1
+            tree = json.loads(line)
+            size, _ = tree_metrics(tree)
+            if size >= minsize:
+                _n += 1
+                out_f.write(f'{line}\n')
 
-    print('By size:')
-    print(sorted(metrics, key=lambda x: x[0], reverse=True))
-
-    print('By depth:')
-    print(sorted(metrics, key=lambda x: x[1], reverse=True))
+    print(f'{_n} out of {n} trees preserved.')
