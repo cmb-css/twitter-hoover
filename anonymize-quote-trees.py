@@ -8,18 +8,18 @@ from hoover.anon.anonymize_v1 import anonymize_raw, anonymize_text
 
 # 'UID' for user ID, 'USN' for user name, 'TID' for tweet ID and 'TURL' for tweet URL.
 def anonymize_tree(tree, anon_dict):
-    tree['id'] = anonymize_raw(tree['id'], 'TID', anon_dict)
+    tree['id'] = anonymize_raw(str(tree['id']), 'TID', anon_dict)
     tree['text'] = anonymize_text(tree['text'], anon_dict)
     tree['user'] = anonymize_raw(tree['user'], 'USN', anon_dict)
-    tree['user_id'] = anonymize_raw(tree['user_id'], 'UID', anon_dict)
+    tree['user_id'] = anonymize_raw(str(tree['user_id']), 'UID', anon_dict)
     tree['urls'] = [anonymize_raw(url, 'TURL', anon_dict) for url in tree['urls']]
     tree['in_reply_to_user'] = anonymize_raw(tree['in_reply_to_user'], 'USN', anon_dict)
-    tree['in_reply_to_user_id'] = anonymize_raw(tree['in_reply_to_user_id'], 'UID', anon_dict)
-    tree['in_reply_to_status_id'] = anonymize_raw(tree['in_reply_to_status_id'], 'TID', anon_dict)
+    tree['in_reply_to_user_id'] = anonymize_raw(str(tree['in_reply_to_user_id']), 'UID', anon_dict)
+    tree['in_reply_to_status_id'] = anonymize_raw(str(tree['in_reply_to_status_id']), 'TID', anon_dict)
     tree['quotes'] = [anonymize_tree(_tree, anon_dict) for _tree in tree['quotes']]
-    tree['quote_ids'] = [anonymize_raw(quote_id, 'TID', anon_dict) for quote_id in tree['quote_ids']]
+    tree['quote_ids'] = [anonymize_raw(str(quote_id), 'TID', anon_dict) for quote_id in tree['quote_ids']]
     if 'retweeters' in tree:
-        tree['retweeters'] = [anonymize_raw(user_id, 'UID', anon_dict) for user_id in tree['retweeters']]
+        tree['retweeters'] = [anonymize_raw(str(user_id), 'UID', anon_dict) for user_id in tree['retweeters']]
 
 
 if __name__ == '__main__':
