@@ -40,6 +40,6 @@ if __name__ == '__main__':
             size, _ = tree_metrics(tree)
             if size >= minsize:
                 _n += 1
-                out_f.write(f'{line}\n')
+                out_f.write(line)
 
     print(f'{_n} out of {n} trees preserved.')
