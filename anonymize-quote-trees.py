@@ -12,7 +12,7 @@ def anonymize_tree(tree, anon_dict):
     # tree['text'] = anonymize_text(tree['text'], anon_dict)
     tree['user'] = anonymize_raw(tree['user'], 'USN', anon_dict)
     tree['user_id'] = anonymize_raw(str(tree['user_id']), 'UID', anon_dict)
-    tree['urls'] = [anonymize_raw(url, 'TURL', anon_dict) for url in tree['urls']]
+    # tree['urls'] = [anonymize_raw(url, 'TURL', anon_dict) for url in tree['urls']]
     if tree['in_reply_to_user']:
         tree['in_reply_to_user'] = anonymize_raw(tree['in_reply_to_user'], 'USN', anon_dict)
     if tree['in_reply_to_user_id']:
