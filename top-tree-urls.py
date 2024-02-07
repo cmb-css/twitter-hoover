@@ -41,6 +41,6 @@ if __name__ == '__main__':
             if size >= minsize:
                 _n += 1
                 url = 'https://twitter.com/i/web/status/{}'.format(str(tree['id']))
-                out_f.write(url)
+                out_f.write(f'{url}\n')
 
     print(f'{_n} out of {n} trees preserved.')
