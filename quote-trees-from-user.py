@@ -23,36 +23,35 @@ class QuoteTreesFromUser:
 
         self.trees = []
 
-    def _filter(self, line):
-        lline = line.lower()
-        if 'covid' in lline:
+    def _filter(self, tree):
+        text = tree['text'].lower()
+        if 'covid' in text:
             return True
-        if 'corona' in lline:
+        if 'corona' in text:
             return True
-        if 'mask' in lline:
+        if 'mask' in text:
             return True
-        if 'impf' in lline:
+        if 'impf' in text:
             return True
-        if 'vaccine' in lline:
+        if 'vaccine' in text:
             return True
         return False
 
     def run(self):
         with open(self.infile, 'rt') as f:
             for line in f:
-                if self._filter(line):
-                    try:
-                        if self.user_id in line:
-                            tweet = json.loads(line)
-                            if str(tweet['user_id']) == self.user_id:
-                                size, depth = tree_metrics(tweet)
-                                if size > self.max_size:
-                                    self.max_size = size
-                                if depth > self.max_depth:
-                                    self.max_depth = depth
-                                self.trees.append(tweet)
-                    except json.decoder.JSONDecodeError:
-                        pass
+                try:
+                    if self.user_id in line:
+                        tree = json.loads(line)
+                        if str(tree['user_id']) == self.user_id and self._filter(tree):
+                            size, depth = tree_metrics(tree)
+                            if size > self.max_size:
+                                self.max_size = size
+                            if depth > self.max_depth:
+                                self.max_depth = depth
+                            self.trees.append(tree)
+                except json.decoder.JSONDecodeError:
+                    pass
 
         print('#trees: {}'.format(len(self.trees)))
         print('max size: {} | max depth: {}'.format(self.max_size, self.max_depth))
