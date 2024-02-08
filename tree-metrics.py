@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
     print('#distinct users: {}'.format(len(users)))
     print('sizes:')
-    print(', '.join([metric[0] for metric in metrics]))
+    print(', '.join([str(metric[0]) for metric in metrics]))
