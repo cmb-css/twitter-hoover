@@ -23,11 +23,14 @@ def extract_users(tree):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--infile', type=str, help='file with all userids', default=None)
+    parser.add_argument('--minsize', type=int, help='minimum number of tree nodes', default=5)
     args = parser.parse_args()
 
     infile = args.infile
+    minsize = args.minsize
     
     print('infile: {}'.format(infile))
+    print('minsize: {}'.format(minsize))
     
     with open(infile, 'rt') as f:
         trees = [json.loads(line) for line in f]
@@ -36,7 +39,7 @@ if __name__ == '__main__':
     metrics = []
     for tree in trees:
         size, depth = tree_metrics(tree)
-        if size >= 4:
+        if size >= minsize:
             users |= extract_users(tree)
             metrics.append((size, depth))
 
