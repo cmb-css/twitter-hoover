@@ -91,6 +91,8 @@ def anonymize_raw(id, id_type, anon_dict, social_network='T'):
             - <hash_range>: the first 3 characters in the hash string
             - <encrypted_id>: the encrypted ID in UTF-8 format
     """
+    if id is None:
+        return None
     if not isascii(id):
         id = id.encode("ascii", "ignore").decode()
     hashed_id = hash_encode(id=id)
