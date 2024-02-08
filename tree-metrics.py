@@ -40,8 +40,8 @@ if __name__ == '__main__':
             users |= extract_users(tree)
             metrics.append((size, depth))
 
-    metrics = sorted(metrics, key=lambda x: x[0])
+    metrics = sorted(metrics, key=lambda x: x[0], reverse=True)
 
     print('#distinct users: {}'.format(len(users)))
-    print('metrics:')
-    print(metrics)
+    print('sizes:')
+    print(', '.join([metric[0] for metric in metrics]))
