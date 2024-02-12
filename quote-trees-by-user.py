@@ -10,10 +10,11 @@ def tree_metrics(tweet, users=None):
     size = 1
     max_depth = 0
     for quote in tweet['quotes']:
-        _size, _depth = tree_metrics(quote, users)
+        _size, _depth, _users = tree_metrics(quote, users)
         size += _size
         if _depth > max_depth:
                 max_depth = _depth
+        users |= _users
     return size, max_depth + 1, users
 
 
