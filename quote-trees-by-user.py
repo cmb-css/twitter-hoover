@@ -90,7 +90,7 @@ class QuoteTreesByUser:
                     if depth > max_depth:
                         max_depth = depth
                 sizes += ['0'] * (15 - len(sizes))
-                f.write('{},{},{},{}\n'.format(user, ','.join(sizes), unique_users, max_depth))
+                f.write('{},{},{},{}\n'.format(user, ','.join(sizes), len(unique_users), max_depth))
 
 
 if __name__ == '__main__':
