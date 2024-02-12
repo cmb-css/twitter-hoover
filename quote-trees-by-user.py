@@ -24,6 +24,7 @@ class QuoteTreesByUser:
 
         with open(perimeter, 'rt') as f:
             self.perimeter = [line.strip() for line in perimeter]
+        print(self.perimeter)
         print(f'Perimeter of {len(self.perimeter)} user loaded.')
 
         self.max_size = -1
