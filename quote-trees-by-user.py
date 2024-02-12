@@ -56,7 +56,7 @@ class QuoteTreesByUser:
                     if self._filter(line):
                         tree = json.loads(line)
                         if self._filter(tree['text']): # and str(tree['user_id']) in self.perimeter:
-                            # print('#2')
+                            print(tree['user_id'])
                             size, depth, users = tree_metrics(tree)
                             if size > self.max_size:
                                 self.max_size = size
