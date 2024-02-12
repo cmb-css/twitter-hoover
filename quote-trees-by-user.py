@@ -6,15 +6,14 @@ from collections import defaultdict
 def tree_metrics(tweet, users=None):
     if users is None:
         users = set()
-    users.add(tweet['user_id'])
+    users.add(tweet['user'])
     size = 1
     max_depth = 0
     for quote in tweet['quotes']:
-        _size, _depth, _users = tree_metrics(quote, users)
+        _size, _depth, _ = tree_metrics(quote, users=users)
         size += _size
         if _depth > max_depth:
                 max_depth = _depth
-        users |= _users
     return size, max_depth + 1, users
 
 
