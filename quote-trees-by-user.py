@@ -52,7 +52,6 @@ class QuoteTreesByUser:
             for line in f:
                 try:
                     if self._filter(line):
-                        print('#1')
                         tree = json.loads(line)
                         if self._filter(tree['text']) and str(tree['user_id']) in self.perimeter:
                             print('#2')
