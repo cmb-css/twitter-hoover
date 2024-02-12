@@ -2,6 +2,8 @@ import argparse
 import json
 from collections import defaultdict
 
+from hoover.anon.decrypt import deanonymize
+
 
 def tree_metrics(tweet, users=None):
     if users is None:
@@ -18,13 +20,15 @@ def tree_metrics(tweet, users=None):
 
 
 class QuoteTreesByUser:
-    def __init__(self, infile, outfile, perimeter):
+    def __init__(self, infile, outfile, perimeter, anon_db_folder_path):
         self.infile = infile
         self.outfile = outfile
 
         with open(perimeter, 'rt') as f:
             self.perimeter = set(line.strip() for line in f)
         print(f'Perimeter of {len(self.perimeter)} user loaded.')
+
+        self.anon_db_folder_path = anon_db_folder_path
 
         self.max_size = -1
         self.max_depth = -1
@@ -89,7 +93,8 @@ class QuoteTreesByUser:
                     if depth > max_depth:
                         max_depth = depth
                 sizes += ['0'] * (15 - len(sizes))
-                f.write('{},{},{},{}\n'.format(user, ','.join(sizes), len(unique_users), max_depth))
+                real_user = deanonymize(user, self.anon_db_folder_path)
+                f.write('{},{},{},{}\n'.format(real_user, ','.join(sizes), len(unique_users), max_depth))
 
 
 if __name__ == '__main__':
@@ -97,6 +102,7 @@ if __name__ == '__main__':
     parser.add_argument('--infile', type=str, help='file with all userids', default=None)
     parser.add_argument('--outfile', type=str, help='output file', default=None)
     parser.add_argument('--perimeter', type=str, help='list of accepted users', default=None)
+    parser.add_argument('--anon_db_folder_path', type=str, help='Path to anon DB.', default='/home/socsemics/anon')
     args = parser.parse_args()
 
     infile = args.infile
@@ -107,5 +113,5 @@ if __name__ == '__main__':
     print('outfile: {}'.format(outfile))
     print('perimeter: {}'.format(perimeter))
 
-    qtbu = QuoteTreesByUser(infile, outfile, perimeter)
+    qtbu = QuoteTreesByUser(infile, outfile, perimeter, args.anon_db_folder_path)
     qtbu.run()
