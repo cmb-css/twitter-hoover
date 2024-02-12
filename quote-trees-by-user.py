@@ -33,8 +33,8 @@ class QuoteTreesByUser:
         self.tree_metrics = defaultdict(list)
         self.users = defaultdict(set)
 
-    def _filter(self, tree):
-        text = tree['text'].lower()
+    def _filter(self, text):
+        text = text.lower()
         if 'covid' in text:
             return True
         if 'corona' in text:
@@ -51,9 +51,9 @@ class QuoteTreesByUser:
         with open(self.infile, 'rt') as f:
             for line in f:
                 try:
-                    if tree['user_id'] in self.perimeter and self.user_id in line:
+                    if self._filter(line):
                         tree = json.loads(line)
-                        if self._filter(tree):
+                        if self._filter(tree['text']) and tree['user_id'] in self.perimeter:
                             size, depth, users = tree_metrics(tree)
                             if size > self.max_size:
                                 self.max_size = size
