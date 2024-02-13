@@ -31,7 +31,8 @@ setup(
         'cryptography',
         'pandas',
         'tenacity',
-        'pycryptodome'
+        'pycryptodome',
+        'tqdm'
     ],
     entry_points='''
         [console_scripts]
