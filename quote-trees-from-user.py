@@ -41,7 +41,7 @@ class QuoteTreesFromUser:
         with open(self.infile, 'rt') as f:
             for line in f:
                 try:
-                    if self.user_id in line:
+                    if self.user in line:
                         tree = json.loads(line)
                         if str(tree['user']) == self.user and self._filter(tree):
                             size, depth = tree_metrics(tree)
