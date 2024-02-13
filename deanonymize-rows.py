@@ -24,5 +24,6 @@ if __name__ == '__main__':
     with open(outfile, 'wt') as f:
         for row in tqdm(rows):
             _row = deanonymize(row, args.anon_db_folder_path)
-            uid = row.split(',')[0]
-            f.write(f'{uid}\n')
+            uid = _row.split(',')[0]
+            if uid != 'user_id':
+                f.write(f'{uid}\n')
