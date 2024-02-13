@@ -2,6 +2,8 @@ import argparse
 import json
 from collections import defaultdict
 
+from tqdm import tqdm
+
 from hoover.anon.decrypt import deanonymize
 
 
@@ -83,7 +85,7 @@ class QuoteTreesByUser:
         # write csv
         with open(self.outfile, 'wt', encoding='utf-8') as f:
             f.write('user,{},unique_users,max_depth\n'.format(','.join([f'tree{i}' for i in range(1, 16)])))
-            for user in users[:2]:
+            for user in tqdm(users):
                 sizes = []
                 unique_users = set()
                 max_depth = -1
@@ -94,11 +96,7 @@ class QuoteTreesByUser:
                         max_depth = depth
                 sizes += ['0'] * (15 - len(sizes))
                 user = deanonymize(user, self.anon_db_folder_path)
-                print(user)
-                print(unique_users)
                 f.write('{},{},{},{}\n'.format(user, ','.join(sizes), len(unique_users), max_depth))
-                # print('{},{},{},{}'.format(real_user, ','.join(sizes), len(unique_users), max_depth))
-                
 
 
 if __name__ == '__main__':
