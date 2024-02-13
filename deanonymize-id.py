@@ -1,6 +1,6 @@
 import argparse
 
-from hoover.anon.decrypt import deanonymize
+from hoover.anon.decrypt_indiv import deanonymize
 
 
 if __name__ == '__main__':
