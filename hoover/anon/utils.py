@@ -141,8 +141,7 @@ def decrypt_anon(encrypted_csv_path, decrypted_csv_path, key):
 
 def determine_id_type(dict_key, object_type):
     if object_type == 'tweet':
-        if dict_key in ['id_str', 'in_reply_to_status_id_str', 'quoted_status_id_str', 'id', 'conversation_id',
-                        'edit_history_tweet_ids']:
+        if dict_key in ['id_str', 'in_reply_to_status_id_str', 'quoted_status_id_str', 'id']:
             return 'TID'
         elif dict_key in ['in_reply_to_screen_name']:
             return 'USN'
@@ -153,12 +152,10 @@ def determine_id_type(dict_key, object_type):
             return 'UID'
         elif dict_key in ['screen_name', 'username']:
             return 'USN'
-        elif dict_key in ['profile_image_url_https', 'profile_image_url']:
+        elif dict_key in ['profile_image_url_https']:
             return 'PPURL'
         elif dict_key in ['url']:
             return 'PWURL' #personal website URL
-        elif dict_key in ['pinned_tweet_id']:
-            return 'TID'
     elif object_type == 'text':
         if dict_key == 'screen_name':
             return 'USN'

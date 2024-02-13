@@ -78,34 +78,6 @@ def isascii(s):
         return True
 
 
-def anonymize_raw(id, id_type, anon_dict, social_network='T'):
-    """Anonymize the selected id based on id type.
-    Parameters:
-        id (str): the id to anonymize
-        id_type (str): the id type of `id`. Possible values are 'UID' for user ID, 'USN' for user name, 'TID' for tweet
-        ID and 'TURL' for tweet URL.
-        social_network (str): the online social network from which the data is extracted (T for Twitter as default)
-    Returns:
-         An anonymized ID in string format composed of four elements separated by dots: '<id_type>.<social_network>.<hash_range>.<encrypted_id>'
-         where:
-            - <hash_range>: the first 3 characters in the hash string
-            - <encrypted_id>: the encrypted ID in UTF-8 format
-    """
-    if id is None:
-        return None
-    if not isascii(id):
-        id = id.encode("ascii", "ignore").decode()
-    hashed_id = hash_encode(id=id)
-    if hashed_id:
-        hash_range_str = hashed_id[:3].decode()
-        key = retrieve_key_from_anon(hash_range_str=hash_range_str, anon_dict=anon_dict)
-        ciphertext, tag = aes_siv_encrypt(key=key, data=id.encode("utf-8"))
-        anonymized_id = f'{id_type}.{social_network}.{hash_range_str}.{ciphertext}.{tag}'
-        return anonymized_id.replace('/', '*')
-    else:
-        logger.info(f'ID {id} cannot be encoded')
-
-
 def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
     """Anonymize the selected id based on id type.
     Parameters:
@@ -124,7 +96,17 @@ def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
         id = data_dict
     else:
         id = data_dict[dict_key]
-    return anonymize_raw(id, id_type, anon_dict, social_network=social_network)
+    if not isascii(id):
+        id = id.encode("ascii", "ignore").decode()
+    hashed_id = hash_encode(id=id)
+    if hashed_id:
+        hash_range_str = hashed_id[:3].decode()
+        key = retrieve_key_from_anon(hash_range_str=hash_range_str, anon_dict=anon_dict)
+        ciphertext, tag = aes_siv_encrypt(key=key, data=id.encode("utf-8"))
+        anonymized_id = f'{id_type}.{social_network}.{hash_range_str}.{ciphertext}.{tag}'
+        return anonymized_id.replace('/', '*')
+    else:
+        logger.info(f'ID {id} cannot be encoded')
 
 
 def clean_anonymize_user(line_dict, output_dict, anon_dict):

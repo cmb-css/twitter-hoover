@@ -33,8 +33,9 @@ def get_args_from_command_line():
     return args
 
 def retrieve_key_from_anon(hash_range_str, anon_db_folder_path):
-    anon_path = os.path.join(anon_db_folder_path, 'anon-DB.csv')
-    anon_df = pd.read_csv(anon_path, keep_default_na=False)
+    anon_path = os.path.join(anon_db_folder_path, 'anon-DB.pickle')
+    anon_df = pd.DataFrame(pd.read_pickle(anon_path).items())#, keep_default_na=False)
+    anon_df.columns = ['hash_range', 'encryption_key']
     if hash_range_str in anon_df['hash_range'].unique():
         assert anon_df.loc[anon_df['hash_range'] == hash_range_str, 'encryption_key'].shape[0] == 1
         key = anon_df.loc[anon_df['hash_range'] == hash_range_str, 'encryption_key'].iloc[0]
