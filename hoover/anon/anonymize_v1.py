@@ -29,6 +29,11 @@ logging.basicConfig(filename=f'/home/data/socsemics/code/twitter-hoover/hoover/a
                     format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S',
                     level=logging.INFO)
+# logging.basicConfig(filename=f'logs/{int(time.time())}.txt',
+#                     filemode='a',
+#                     format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
+#                     datefmt='%m/%d/%Y %H:%M:%S',
+#                     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -78,7 +83,7 @@ def isascii(s):
         return True
 
 
-def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
+def anonymize_raw(id, id_type, anon_dict, social_network='T'):
     """Anonymize the selected id based on id type.
     Parameters:
         id (str): the id to anonymize
@@ -91,11 +96,6 @@ def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
             - <hash_range>: the first 3 characters in the hash string
             - <encrypted_id>: the encrypted ID in UTF-8 format
     """
-    id_type = determine_id_type(dict_key=dict_key, object_type=object_type)
-    if object_type == 'text':
-        id = data_dict
-    else:
-        id = data_dict[dict_key]
     if not isascii(id):
         id = id.encode("ascii", "ignore").decode()
     hashed_id = hash_encode(id=id)
@@ -107,6 +107,15 @@ def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
         return anonymized_id.replace('/', '*')
     else:
         logger.info(f'ID {id} cannot be encoded')
+
+
+def anonymize(data_dict, dict_key, object_type, anon_dict, social_network='T'):
+    id_type = determine_id_type(dict_key=dict_key, object_type=object_type)
+    if object_type == 'text':
+        id = data_dict
+    else:
+        id = data_dict[dict_key]
+    return anonymize_raw(id, id_type, anon_dict, social_network=social_network)
 
 
 def clean_anonymize_user(line_dict, output_dict, anon_dict):

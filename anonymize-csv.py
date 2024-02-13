@@ -2,6 +2,8 @@ import argparse
 import pickle
 import os
 
+from tqdm import tqdm
+
 from hoover.anon.anonymize_v1 import anonymize_raw
 
 
@@ -31,6 +33,6 @@ if __name__ == '__main__':
         ids = [line.strip() for line in f]
 
     with open(outfile, 'wt') as f:
-        for _id in ids:
+        for _id in tqdm(ids):
             anon_id = anonymize_raw(_id, data_type, anon_dict)
             f.write(f'{anon_id}\n')
