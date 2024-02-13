@@ -84,8 +84,8 @@ class QuoteTreesByUser:
 
         # write csv
         with open(self.outfile, 'wt', encoding='utf-8') as f:
-            f.write('user,{},unique_users,max_depth\n'.format(','.join([f'tree{i}' for i in range(1, 16)])))
-            for user in tqdm(users):
+            f.write('user,user_anon,{},unique_users,max_depth\n'.format(','.join([f'tree{i}' for i in range(1, 16)])))
+            for user in tqdm(users[:100]):
                 sizes = []
                 unique_users = set()
                 max_depth = -1
@@ -95,8 +95,8 @@ class QuoteTreesByUser:
                     if depth > max_depth:
                         max_depth = depth
                 sizes += ['0'] * (15 - len(sizes))
-                user = deanonymize(user, self.anon_db_folder_path)
-                f.write('{},{},{},{}\n'.format(user, ','.join(sizes), len(unique_users), max_depth))
+                _user = deanonymize(user, self.anon_db_folder_path)
+                f.write('{},{},{},{}\n'.format(_user, user, ','.join(sizes), len(unique_users), max_depth))
 
 
 if __name__ == '__main__':
