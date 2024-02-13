@@ -43,7 +43,7 @@ class QuoteTreesFromUser:
                 try:
                     if self.user_id in line:
                         tree = json.loads(line)
-                        if str(tree['user_id']) == self.user_id and self._filter(tree):
+                        if str(tree['user']) == self.user_id and self._filter(tree):
                             size, depth = tree_metrics(tree)
                             if size > self.max_size:
                                 self.max_size = size
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--infile', type=str, help='file with all userids', default=None)
     parser.add_argument('--outfile', type=str, help='output file', default=None)
-    parser.add_argument('--userid', type=str, help='user id', default=None)
+    parser.add_argument('--user', type=str, help='user name', default=None)
     args = parser.parse_args()
 
     infile = args.infile
