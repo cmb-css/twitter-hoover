@@ -42,7 +42,10 @@ def retrieve_key_from_anon(hash_range_str, anon_db_folder_path):
 
 def aes_siv_decrypt(key, ciphertext, tag):
     key = b64decode(key)
+    print(f'b64decode(key): {key}')
     cipher = AES.new(key, AES.MODE_SIV)
+    print(f'cipher: {cipher}')
+    print(f'tag: {tag}')
     return str(cipher.decrypt_and_verify(b64decode(ciphertext), b64decode(tag)).decode('utf-8'))
 
 def deanonymize(anonymized_id, anon_db_folder_path):
@@ -55,6 +58,7 @@ def deanonymize(anonymized_id, anon_db_folder_path):
     anonymized_id = anonymized_id.replace('*', '/')
     id_type, social_network, hash_range_str, ciphertext, tag = anonymized_id.split('.')
     key = retrieve_key_from_anon(hash_range_str=hash_range_str, anon_db_folder_path=anon_db_folder_path)
+    print(f'key: {key}')
     return aes_siv_decrypt(key=key, ciphertext=ciphertext, tag=tag)
 
 if __name__ == '__main__':
