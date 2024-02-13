@@ -49,16 +49,18 @@ class QuoteTreesFromUser:
                                 self.max_size = size
                             if depth > self.max_depth:
                                 self.max_depth = depth
-                            self.trees.append(tree)
+                            self.trees.append((tree, size))
                 except json.decoder.JSONDecodeError:
                     pass
+
+        self.trees = sorted(self.trees, key=lambda x: x[1], reverse=True)
 
         print('#trees: {}'.format(len(self.trees)))
         print('max size: {} | max depth: {}'.format(self.max_size, self.max_depth))
 
         # write trees
         with open(self.outfile, 'wt', encoding='utf-8') as f:
-            for tree in self.trees:
+            for tree, _ in self.trees:
                 f.write('{}\n'.format(json.dumps(tree, ensure_ascii=False)))
 
 
