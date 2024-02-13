@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     infile = args.infile
     outfile = args.outfile
-    user = args.userid
+    user = args.user
 
     print('infile: {}'.format(infile))
     print('outfile: {}'.format(outfile))
