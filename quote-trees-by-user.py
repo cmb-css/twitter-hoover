@@ -95,6 +95,8 @@ class QuoteTreesByUser:
                 sizes += ['0'] * (15 - len(sizes))
                 real_user = deanonymize(user, self.anon_db_folder_path)
                 f.write('{},{},{},{}\n'.format(real_user, ','.join(sizes), len(unique_users), max_depth))
+                print('{},{},{},{}\n'.format(real_user, ','.join(sizes), len(unique_users), max_depth))
+                
 
 
 if __name__ == '__main__':
