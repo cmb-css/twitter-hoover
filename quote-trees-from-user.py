@@ -14,10 +14,10 @@ def tree_metrics(tweet):
 
 
 class QuoteTreesFromUser:
-    def __init__(self, infile, outfile, user_id):
+    def __init__(self, infile, outfile, user):
         self.infile = infile
         self.outfile = outfile
-        self.user_id = user_id
+        self.user = user
         self.max_size = -1
         self.max_depth = -1
 
@@ -43,7 +43,7 @@ class QuoteTreesFromUser:
                 try:
                     if self.user_id in line:
                         tree = json.loads(line)
-                        if str(tree['user']) == self.user_id and self._filter(tree):
+                        if str(tree['user']) == self.user and self._filter(tree):
                             size, depth = tree_metrics(tree)
                             if size > self.max_size:
                                 self.max_size = size
@@ -71,11 +71,11 @@ if __name__ == '__main__':
 
     infile = args.infile
     outfile = args.outfile
-    user_id = args.userid
+    user = args.userid
 
     print('infile: {}'.format(infile))
     print('outfile: {}'.format(outfile))
-    print('user id: {}'.format(user_id))
+    print('user: {}'.format(user))
 
-    qtfu = QuoteTreesFromUser(infile, outfile, user_id)
+    qtfu = QuoteTreesFromUser(infile, outfile, user)
     qtfu.run()
