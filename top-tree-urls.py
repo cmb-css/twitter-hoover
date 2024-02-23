@@ -1,6 +1,8 @@
 import argparse
 import json
 
+from hoover.anon.decrypt_indiv import deanonymize
+
 
 def tree_metrics(tweet):
     size = 1
@@ -17,30 +19,29 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--infile', type=str, help='input file', default=None)
     parser.add_argument('--outfile', type=str, help='output file', default=None)
-    parser.add_argument('--minsize', type=int, help='minimum number of tree nodes', default=5)
+    parser.add_argument('--ntrees', type=int, help='number of trees', default=30)
+    parser.add_argument("--anon_db_folder_path", type=str, help="Path to anon DB.", default='/home/socsemics/anon')
     args = parser.parse_args()
 
     infile = args.infile
     outfile = args.outfile
-    minsize = args.minsize
+    ntrees = args.minsize
     
     print('infile: {}'.format(infile))
     print('outfile: {}'.format(outfile))
-    print('minsize: {}'.format(minsize))
+    print('#trees: {}'.format(ntrees))
     
-    with open(infile, 'rt') as f:
-        trees = [json.loads(line) for line in f]
     
-    n = 0
-    _n = 0
-    with open(infile, 'rt') as in_f, open(outfile, 'wt') as out_f:
+    trees = []
+    with open(infile, 'rt') as in_f:
         for line in in_f:
-            n += 1
             tree = json.loads(line)
             size, _ = tree_metrics(tree)
-            if size >= minsize:
-                _n += 1
-                url = 'https://twitter.com/i/web/status/{}'.format(str(tree['id']))
-                out_f.write(f'{url}\n')
+            trees.append((tree, size))
+    trees = sorted(trees, key=lambda x: x[1], reverse=True)
 
-    print(f'{_n} out of {n} trees preserved.')
+    with open(outfile, 'wt') as out_f:
+        for tree in trees[:ntrees]:
+            tid = deanonymize(str(tree['id']), args.anon_db_folder_path)
+            url = 'https://twitter.com/i/web/status/{}'.format(tid)
+            out_f.write(f'{url}\n')
