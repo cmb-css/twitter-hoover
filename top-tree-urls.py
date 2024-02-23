@@ -41,7 +41,7 @@ if __name__ == '__main__':
     trees = sorted(trees, key=lambda x: x[1], reverse=True)
 
     with open(outfile, 'wt') as out_f:
-        for tree in trees[:ntrees]:
+        for tree, size in trees[:ntrees]:
             tid = deanonymize(str(tree['id']), args.anon_db_folder_path)
             url = 'https://twitter.com/i/web/status/{}'.format(tid)
-            out_f.write(f'{url}\n')
+            out_f.write(f'{url},{size}\n')
