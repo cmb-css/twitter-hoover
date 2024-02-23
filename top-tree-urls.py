@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     infile = args.infile
     outfile = args.outfile
-    ntrees = args.minsize
+    ntrees = args.ntrees
     
     print('infile: {}'.format(infile))
     print('outfile: {}'.format(outfile))
